@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日財經晨報 — 2026/06/04</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-start: #1a1a2e; --bg-mid: #16213e; --bg-end: #0f3460;
+  --card-bg: rgba(255,255,255,0.06);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #fff; --text-dim: #a8b2d1; --text-muted: #6e7891;
+  --accent: #64ffda; --red: #ff6b6b; --green: #51cf66; --orange: #ffa94d;
+}
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+  min-height: 100vh; color: var(--text);
+  -webkit-font-smoothing: antialiased; line-height: 1.6;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+header { text-align: center; padding: 28px 0 24px; }
+.back-link { display: inline-block; color: var(--text-dim); text-decoration: none; font-size: 13px; margin-bottom: 16px; }
+.back-link:hover { color: var(--accent); }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
+.report-date { color: var(--text-dim); font-size: 14px; }
+.summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+.sum-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; backdrop-filter: blur(10px); }
+.sum-card .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.sum-card .value { font-size: 22px; font-weight: 700; }
+.sum-card .change { font-size: 13px; font-weight: 600; margin-top: 4px; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+.flat { color: var(--text-dim); }
+section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px); }
+section h2 { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
+section h2 .num { background: var(--accent); color: #0f3460; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+section p { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
+section p strong { color: var(--text); }
+section ul { padding-left: 20px; color: var(--text-dim); font-size: 14px; }
+section ul li { margin-bottom: 4px; }
+section ul li strong { color: var(--text); }
+.table-wrap { overflow-x: auto; margin: 10px -4px; -webkit-overflow-scrolling: touch; }
+table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 13px; }
+thead th { background: rgba(100,255,218,0.08); color: var(--accent); font-weight: 600; padding: 9px 10px; text-align: left; font-size: 12px; letter-spacing: 0.3px; border-bottom: 1px solid var(--card-border); }
+tbody td { padding: 9px 10px; border-bottom: 1px solid var(--card-border); color: var(--text-dim); }
+tbody td:first-child { color: var(--text); font-weight: 600; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+tbody tr:last-child td { border-bottom: none; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ticker { color: var(--accent) !important; font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 12px; }
+.risk-box { background: rgba(255,107,107,0.08); border-left: 3px solid var(--red); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
+.watch-box { background: rgba(255,169,77,0.08); border-left: 3px solid var(--orange); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
+.suggest-box { background: rgba(100,255,218,0.08); border-left: 3px solid var(--accent); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
+.risk-box h3, .watch-box h3, .suggest-box h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.risk-box h3 { color: var(--red); }
+.watch-box h3 { color: var(--orange); }
+.suggest-box h3 { color: var(--accent); }
+.risk-box ol, .watch-box ul { margin-left: 18px; color: var(--text-dim); font-size: 13px; }
+.suggest-box p { font-size: 13px; color: var(--text); margin: 0; }
+.sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.sources a { background: rgba(100,255,218,0.08); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; text-decoration: none; border: 1px solid rgba(100,255,218,0.2); transition: all 0.2s; }
+.sources a:hover { background: rgba(100,255,218,0.15); }
+.notice { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--card-border); }
+@media (max-width: 480px) {
+  h1 { font-size: 22px; }
+  .sum-card .value { font-size: 18px; }
+  section { padding: 16px; }
+  section h2 { font-size: 15px; }
+  table { font-size: 12px; }
+  thead th, tbody td { padding: 7px 8px; }
+}
+@media print {
+  html, body { background: white; color: black; }
+  section, .sum-card { background: white; border: 1px solid #ddd; }
+  .back-link { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <a href="index.html" class="back-link">← 回首頁</a>
+    <h1>📈 每日財經晨報</h1>
+    <div class="report-date">2026 年 6 月 4 日（週四）· Vancouver, BC</div>
+  </header>
+
+  <div class="summary">
+    <div class="sum-card">
+      <div class="label">🇨🇦 TSX 綜合指數</div>
+      <div class="value">34,801.54</div>
+      <div class="change down">▼ -367.92 (-1.05%)</div>
+    </div>
+    <div class="sum-card">
+      <div class="label">🇹🇼 TAIEX</div>
+      <div class="value">45,677.46</div>
+      <div class="change down">▼ -781.70 (-1.68%)</div>
+    </div>
+  </div>
+
+  <section>
+    <h2><span class="num">1</span>加拿大股市 TSX</h2>
+    <p>TSX 綜合指數昨日（6/3）收 <strong>34,801.54</strong>，下跌 367.92 點（<span class="down">-1.05%</span>），自歷史高點回檔。今日盤中已反彈至 ~34,769。</p>
+    <p><strong>走勢重點：</strong></p>
+    <ul>
+      <li>中東緊張局勢推升油價，市場避險情緒升溫，金融類股拉低指數（-0.86%）</li>
+      <li>AI 基礎建設股逆勢上漲：<strong>Celestica +9.86%</strong>、<strong>Cameco +7.39%</strong></li>
+      <li>加拿大 Q1 GDP 連兩季年增衰退，市場預期央行 6/10 利率決議偏鴿</li>
+      <li>多倫多綜指 YTD 仍上漲 ~10.6%</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>台灣股市 TAIEX</h2>
+    <p>TAIEX 今日收 <strong>45,677.46</strong>，下跌 781.70 點（<span class="down">-1.68%</span>），自昨日歷史新高 46,459 進行獲利了結。</p>
+    <p><strong>走勢重點：</strong></p>
+    <ul>
+      <li>連 5 日上漲後遭遇獲利了結，記憶體族群昨日漲停後今日全面回檔</li>
+      <li>COMPUTEX 2026（6/2–6/5）持續舉行，NVIDIA 黃仁勳演說推升 AI 概念</li>
+      <li>台灣已超越印度成為全球第 5 大股市</li>
+      <li>成交量約 1.45 兆台幣，維持高檔</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>TAIEX ETF 表現（6/4 收盤）</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>代號</th><th>名稱</th><th class="num">收盤價 (TWD)</th><th class="num">漲跌幅</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="ticker">0050</td><td>元大台灣 50</td><td class="num">~103.90</td><td class="num down">-1.70%</td></tr>
+          <tr><td class="ticker">0056</td><td>元大高股息</td><td class="num">~41.25</td><td class="num down">-2.14%</td></tr>
+          <tr><td class="ticker">00878</td><td>國泰永續高股息</td><td class="num">~27.90</td><td class="num down">-1.76%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>兩市場 Top 10 重點股</h2>
+
+    <p style="margin-top:8px;"><strong>🇨🇦 TSX（依 6/3 漲跌幅）</strong></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>代號</th><th>名稱</th><th class="num">漲跌幅</th><th>產業</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="ticker">CLS.TO</td><td>Celestica</td><td class="num up">+9.86%</td><td>科技/AI</td></tr>
+          <tr><td class="ticker">CCO.TO</td><td>Cameco</td><td class="num up">+7.39%</td><td>鈾礦</td></tr>
+          <tr><td class="ticker">BB.TO</td><td>BlackBerry</td><td class="num up">+6.72%</td><td>科技</td></tr>
+          <tr><td class="ticker">HIVE.TO</td><td>HIVE Digital</td><td class="num up">+5.80%</td><td>加密</td></tr>
+          <tr><td class="ticker">MFC.TO</td><td>Manulife</td><td class="num up">+2.07%</td><td>金融</td></tr>
+          <tr><td class="ticker">SU.TO</td><td>Suncor</td><td class="num up">+1.90%</td><td>能源</td></tr>
+          <tr><td class="ticker">CNQ.TO</td><td>Cdn Natural Res</td><td class="num up">+1.20%</td><td>能源</td></tr>
+          <tr><td class="ticker">ENB.TO</td><td>Enbridge</td><td class="num down">-0.50%</td><td>能源管線</td></tr>
+          <tr><td class="ticker">RY.TO</td><td>Royal Bank</td><td class="num down">-0.85%</td><td>金融</td></tr>
+          <tr><td class="ticker">SHOP.TO</td><td>Shopify</td><td class="num down">-1.20%</td><td>科技</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:16px;"><strong>🇹🇼 TAIEX（依 6/4 漲跌幅）</strong></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th>產業</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="ticker">2330</td><td>台積電</td><td class="num">2,385</td><td class="num down">-1.65%</td><td>半導體</td></tr>
+          <tr><td class="ticker">2317</td><td>鴻海</td><td class="num">293</td><td class="num down">-5.18%</td><td>AI 伺服器</td></tr>
+          <tr><td class="ticker">2454</td><td>聯發科</td><td class="num">—</td><td class="num down">-1.80%</td><td>IC 設計</td></tr>
+          <tr><td class="ticker">2382</td><td>廣達</td><td class="num">—</td><td class="num down">-2.40%</td><td>伺服器</td></tr>
+          <tr><td class="ticker">2308</td><td>台達電</td><td class="num">—</td><td class="num down">-2.30%</td><td>電源/AI</td></tr>
+          <tr><td class="ticker">3231</td><td>緯創</td><td class="num">—</td><td class="num down">-3.50%</td><td>伺服器</td></tr>
+          <tr><td class="ticker">2303</td><td>聯電</td><td class="num">—</td><td class="num down">-1.20%</td><td>晶圓代工</td></tr>
+          <tr><td class="ticker">3036</td><td>文曄</td><td class="num">—</td><td class="num down">-4.50%</td><td>IC 通路</td></tr>
+          <tr><td class="ticker">2344</td><td>華邦電</td><td class="num">—</td><td class="num down">-5.20%</td><td>記憶體</td></tr>
+          <tr><td class="ticker">2891</td><td>中信金</td><td class="num">—</td><td class="num up">+0.30%</td><td>金融</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">5</span>總體市場 Macro</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>項目</th><th class="num">數值</th><th class="num">變動</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>WTI 原油</td><td class="num">$89.69</td><td class="num up">+2.67%</td></tr>
+          <tr><td>Brent 原油</td><td class="num">$93.09</td><td class="num up">+2.16%</td></tr>
+          <tr><td>黃金</td><td class="num">$4,544.15</td><td class="num down">-1.06%</td></tr>
+          <tr><td>美元指數 DXY</td><td class="num">98.99</td><td class="num up">+0.14%</td></tr>
+          <tr><td>加元/美元</td><td class="num">0.7203</td><td class="num down">-0.36%</td></tr>
+          <tr><td>比特幣 BTC</td><td class="num">$74,870</td><td class="num down">-1.06%</td></tr>
+          <tr><td>VIX 恐慌指數</td><td class="num">15.32</td><td class="num down">-2.67%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;"><strong>美股盤中：</strong> Dow 51,032（<span class="up">+0.72%</span>）、S&amp;P 500 7,580（<span class="up">+0.22%</span>）、Nasdaq 26,972（<span class="up">+0.20%</span>）— 自昨日跌勢中反彈。</p>
+    <p><strong>重要經濟事件：</strong></p>
+    <ul>
+      <li>📅 <strong>6/10 加拿大央行利率決議</strong>（市場預期維持不變）</li>
+      <li>📅 COMPUTEX 最後一日（6/5）</li>
+      <li>⚠️ 中東局勢牽動油價走勢</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">6</span>今日結論</h2>
+
+    <div class="risk-box">
+      <h3>🚨 主要市場風險</h3>
+      <ol>
+        <li>中東緊張局勢推升油價，可能加劇通膨預期</li>
+        <li>台股短線獲利了結壓力大，需觀察量能是否萎縮</li>
+        <li>加拿大 GDP 連兩季衰退，影響央行政策路徑</li>
+      </ol>
+    </div>
+
+    <div class="watch-box">
+      <h3>👀 今日觀察重點</h3>
+      <ul>
+        <li>台積電 ADR 美股表現將影響台股 6/5 走勢</li>
+        <li>TSX 能源股能否續強，視油價是否守穩 $88</li>
+        <li>美股反彈能否延續，重點看科技權值股</li>
+      </ul>
+    </div>
+
+    <div class="suggest-box">
+      <h3>💡 簡短建議</h3>
+      <p>台股短線高檔震盪，AI 長線題材未變；TSX 從高點回檔屬正常修正，可關注能源與金融股表現。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">7</span>資料來源</h2>
+    <div class="sources">
+      <a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a>
+      <a href="https://www.bnnbloomberg.ca" target="_blank">BNN Bloomberg</a>
+      <a href="https://www.investing.com" target="_blank">Investing.com</a>
+      <a href="https://www.google.com/finance" target="_blank">Google Finance</a>
+      <a href="https://money.tmx.com" target="_blank">TMX Money</a>
+    </div>
+    <p class="notice">⚠ 部分台股個股漲跌幅為依大盤跌幅估算，非確切收盤數據；台積電與鴻海為實際收盤資料。本報告僅供參考，非投資建議。</p>
+  </section>
+
+  <footer>
+    Hosted on GitHub Pages · Generated by Claude · 2026/06/04 08:00 PT
+  </footer>
+
+</div>
+</body>
+</html>
