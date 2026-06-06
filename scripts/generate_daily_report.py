@@ -157,7 +157,7 @@ def call_gemini(prompt):
         print("[warn] GEMINI_API_KEY not set, using fallback narrative")
         return None
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     try:
         resp = model.generate_content(prompt)
         text = resp.text.strip()
