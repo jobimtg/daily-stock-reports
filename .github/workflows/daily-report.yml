@@ -1,0 +1,53 @@
+name: Daily Stock Report
+
+on:
+  schedule:
+    # 15:00 UTC = 08:00 AM Pacific (PDT, UTC-7)
+    # During PST (UTC-8) this becomes 07:00 AM Pacific.
+    # If you prefer always 8 AM in PST too, change to "0 16 * * *".
+    - cron: '0 15 * * *'
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+# Required so the workflow can commit and push back to the repo
+permissions:
+  contents: write
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate daily report
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python scripts/generate_daily_report.py
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Add only the new daily HTML, not the whole repo
+          git add daily-financial-brief-*.html
+          if git diff --staged --quiet; then
+            echo "No new report to commit"
+          else
+            REPORT_DATE=$(date -u -d '8 hours ago' +'%Y-%m-%d')
+            git commit -m "🤖 Daily report for ${REPORT_DATE}"
+            git push
+          fi
