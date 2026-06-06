@@ -46,7 +46,7 @@ TAIEX_ETFS = [
     {"ticker": "00701.TW",  "name": "國泰股利精選 30",      "category": "高股息",     "core": False},
     {"ticker": "00733.TW",  "name": "富邦臺灣中小",         "category": "中小型",     "core": False},
     {"ticker": "00757.TW",  "name": "統一 FANG+",           "category": "美科技",     "core": False},
-    {"ticker": "00679B.TW", "name": "元大美債 20 年",       "category": "美債（避險）", "core": False},
+    {"ticker": "00687B.TW", "name": "國泰美債 20 年", "category": "美債（避險）", "core": False},
 ]
 
 # ============================================================
