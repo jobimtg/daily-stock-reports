@@ -2,9 +2,10 @@
 Daily Stock Report Generator
 -----------------------------
 Fetches market data via yfinance, asks Gemini for narrative analysis,
-renders an HTML report using a Jinja2 template, and saves it.
+renders an HTML report using a Jinja2 template, saves it, and also
+writes `latest.json` for downstream notification (e.g. LINE).
 
-GitHub Actions will commit & push the resulting file automatically.
+GitHub Actions will commit & push the resulting HTML automatically.
 
 Usage:
     python generate_daily_report.py
@@ -14,7 +15,7 @@ Requires:
     pip install yfinance google-generativeai jinja2
 
 Env vars:
-    GEMINI_API_KEY (required)
+    GEMINI_API_KEY (required for AI narrative; falls back to template if missing)
 """
 
 import os
@@ -31,8 +32,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 import config
 
-SCRIPT_DIR = Path(__file__).parent
-ROOT_DIR   = SCRIPT_DIR.parent
+SCRIPT_DIR   = Path(__file__).parent
+ROOT_DIR     = SCRIPT_DIR.parent
 TEMPLATE_DIR = SCRIPT_DIR / "templates"
 
 # ============================================================
@@ -77,37 +78,20 @@ def safe_fetch(ticker, period="5d"):
         return None
 
 def fetch_list(items, ticker_key="ticker"):
-    """Fetch market data for a list of config dicts. Skips missing."""
     out = []
     for item in items:
         data = safe_fetch(item[ticker_key])
         if data is None:
             continue
-        merged = {**item, **data}
-        out.append(merged)
+        out.append({**item, **data})
     return out
 
-# ============================================================
-# Daily ETF selection
-# ============================================================
-
 def pick_etfs(all_etfs, n=15):
-    """
-    Pick n ETFs daily based on relevance. Core ETFs are always included.
-    Remaining slots filled by ETFs with the largest absolute price move,
-    so the report highlights ETFs that actually moved today.
-    """
+    """Core ETFs always; fill rest with biggest movers."""
     core = [e for e in all_etfs if e.get("core")]
     rest = [e for e in all_etfs if not e.get("core")]
-
-    # Sort non-core by absolute change descending
     rest.sort(key=lambda e: abs(e.get("change_pct") or 0), reverse=True)
-
     picked = core + rest[: max(0, n - len(core))]
-
-    # Final sort: keep order roughly stable but losers grouped, etc.
-    # For readability we'll sort by change_pct ascending (worst first)
-    # — switch to descending if you prefer.
     picked.sort(key=lambda e: e.get("change_pct") or 0)
     return picked[:n]
 
@@ -146,15 +130,12 @@ GEMINI_PROMPT_TEMPLATE = """你是一位專業的繁體中文財經分析師。�
   "tsx_highlights": ["重點1（簡短）", "重點2", "重點3", "重點4"],
   "taiex_summary": "1-2 句 TAIEX 走勢摘要，繁體中文",
   "taiex_highlights": ["重點1", "重點2", "重點3", "重點4"],
-  "risks": ["市場風險1（具體）", "風險2", "風險3", "風險4", "風險5"],
+  "risks": ["市場風險1", "風險2", "風險3", "風險4", "風險5"],
   "watch_points": ["今日觀察1", "觀察2", "觀察3", "觀察4", "觀察5"],
   "suggestion": "1 段簡短建議，繁體中文",
   "portfolio_observations": [
     "概念性觀察1，例如 'AI/Tech 為主要部位（NVDA、SMCI）：...'，禁止具體百分比",
-    "觀察2",
-    "觀察3",
-    "觀察4",
-    "觀察5"
+    "觀察2", "觀察3", "觀察4", "觀察5"
   ],
   "position_health": [
     "集中度觀察：...",
@@ -173,15 +154,13 @@ GEMINI_PROMPT_TEMPLATE = """你是一位專業的繁體中文財經分析師。�
 def call_gemini(prompt):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("[error] GEMINI_API_KEY not set", file=sys.stderr)
+        print("[warn] GEMINI_API_KEY not set, using fallback narrative")
         return None
-
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel("gemini-2.0-flash")
     try:
         resp = model.generate_content(prompt)
         text = resp.text.strip()
-        # Strip markdown code fences if Gemini adds them despite instructions
         if text.startswith("```"):
             text = text.split("\n", 1)[1] if "\n" in text else text
             if text.endswith("```"):
@@ -192,36 +171,26 @@ def call_gemini(prompt):
         return json.loads(text)
     except json.JSONDecodeError as e:
         print(f"[error] Gemini returned invalid JSON: {e}", file=sys.stderr)
-        print(f"Raw text:\n{text[:500]}", file=sys.stderr)
         return None
     except Exception as e:
         print(f"[error] Gemini call failed: {e}", file=sys.stderr)
         return None
 
 def build_gemini_prompt(date_str, weekday_zh, tsx, taiex, tsx_top, taiex_top, macro, portfolio):
-    def fmt_stock_line(s):
-        return f"- {s['ticker']} {s['name']}: {fmt_pct(s.get('change_pct'))}（{s.get('sector','')})"
-    def fmt_macro_line(m):
-        return f"- {m['name']}: {fmt_price(m.get('price'))} {m.get('unit','')} ({fmt_pct(m.get('change_pct'))})"
-    def fmt_port_line(p):
-        return f"- {p['ticker']} {p['name']} {fmt_pct(p.get('change_pct'))}"
-
+    def f_stock(s): return f"- {s['ticker']} {s['name']}: {fmt_pct(s.get('change_pct'))}（{s.get('sector','')})"
+    def f_macro(m): return f"- {m['name']}: {fmt_price(m.get('price'))} {m.get('unit','')} ({fmt_pct(m.get('change_pct'))})"
+    def f_port(p):  return f"- {p['ticker']} {p['name']} {fmt_pct(p.get('change_pct'))}"
     return GEMINI_PROMPT_TEMPLATE.format(
-        date=date_str,
-        weekday=weekday_zh,
+        date=date_str, weekday=weekday_zh,
         tsx_price=fmt_price(tsx.get("price")) if tsx else "—",
         tsx_pct=fmt_pct(tsx.get("change_pct")) if tsx else "—",
         taiex_price=fmt_price(taiex.get("price")) if taiex else "—",
         taiex_pct=fmt_pct(taiex.get("change_pct")) if taiex else "—",
-        tsx_top="\n".join(fmt_stock_line(s) for s in tsx_top[:15]),
-        taiex_top="\n".join(fmt_stock_line(s) for s in taiex_top[:15]),
-        macro="\n".join(fmt_macro_line(m) for m in macro),
-        portfolio="\n".join(fmt_port_line(p) for p in portfolio),
+        tsx_top="\n".join(f_stock(s) for s in tsx_top[:15]),
+        taiex_top="\n".join(f_stock(s) for s in taiex_top[:15]),
+        macro="\n".join(f_macro(m) for m in macro),
+        portfolio="\n".join(f_port(p) for p in portfolio),
     )
-
-# ============================================================
-# Fallback narrative (when Gemini fails or quota exceeded)
-# ============================================================
 
 def fallback_narrative(tsx, taiex):
     tsx_dir = "上漲" if (tsx and (tsx.get("change_pct") or 0) > 0) else "下跌"
@@ -281,7 +250,6 @@ def main():
     parser.add_argument("--output-dir", default=str(ROOT_DIR), help="Output directory")
     args = parser.parse_args()
 
-    # Resolve date in Pacific timezone
     pt = ZoneInfo(config.TIMEZONE)
     if args.date:
         date_obj = dt.date.fromisoformat(args.date)
@@ -295,77 +263,73 @@ def main():
 
     print(f"=== Daily Stock Report: {date_iso} ({weekday_zh}) ===")
 
-    # ---- Fetch market data ----
-    print("[1/4] Fetching market data ...")
+    print("[1/5] Fetching market data ...")
     tsx_index   = safe_fetch(config.TSX_INDEX_TICKER)
     taiex_index = safe_fetch(config.TAIEX_INDEX_TICKER)
-
-    tsx_top    = fetch_list(config.TSX_TOP15)
-    taiex_top  = fetch_list(config.TAIEX_TOP15)
-
+    tsx_top     = fetch_list(config.TSX_TOP15)
+    taiex_top   = fetch_list(config.TAIEX_TOP15)
     tw_etfs_all = fetch_list(config.TAIEX_ETFS)
     ca_etfs_all = fetch_list(config.CANADA_ETFS)
-    tw_etfs = pick_etfs(tw_etfs_all, 15)
-    ca_etfs = pick_etfs(ca_etfs_all, 15)
+    tw_etfs     = pick_etfs(tw_etfs_all, 15)
+    ca_etfs     = pick_etfs(ca_etfs_all, 15)
+    macro       = fetch_list(config.MACRO)
+    us_idx      = fetch_list(config.US_INDICES)
+    portfolio   = fetch_list(config.PORTFOLIO)
 
-    macro      = fetch_list(config.MACRO)
-    us_idx     = fetch_list(config.US_INDICES)
-    portfolio  = fetch_list(config.PORTFOLIO)
-
-    # Sort top stocks by change descending (best first)
     tsx_top.sort(key=lambda s: s.get("change_pct") or 0, reverse=True)
     taiex_top.sort(key=lambda s: s.get("change_pct") or 0, reverse=True)
 
-    # Annotate portfolio with arrows
     for p in portfolio:
         arr, cls = arrow_for(p.get("change_pct"))
         p["arrow"] = arr
         p["arrow_class"] = cls
 
-    # ---- Call Gemini for narrative ----
-    print("[2/4] Calling Gemini for narrative ...")
-    prompt = build_gemini_prompt(
-        date_str, weekday_zh,
-        tsx_index, taiex_index,
-        tsx_top, taiex_top,
-        macro, portfolio,
-    )
+    print("[2/5] Calling Gemini for narrative ...")
+    prompt = build_gemini_prompt(date_str, weekday_zh, tsx_index, taiex_index,
+                                 tsx_top, taiex_top, macro, portfolio)
     narrative = call_gemini(prompt)
     if not narrative:
         print("  Using fallback narrative.")
         narrative = fallback_narrative(tsx_index, taiex_index)
 
-    # ---- Render template ----
-    print("[3/4] Rendering HTML ...")
+    print("[3/5] Rendering HTML ...")
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
         autoescape=select_autoescape(["html", "xml"]),
     )
     env.filters["pct"] = fmt_pct
     env.filters["price"] = fmt_price
-
     template = env.get_template("report.html.j2")
     html = template.render(
-        date_str=date_str,
-        weekday_zh=weekday_zh,
-        tsx=tsx_index,
-        taiex=taiex_index,
-        tsx_top=tsx_top,
-        taiex_top=taiex_top,
-        tw_etfs=tw_etfs,
-        ca_etfs=ca_etfs,
-        macro=macro,
-        us_idx=us_idx,
-        portfolio=portfolio,
-        n=narrative,
+        date_str=date_str, weekday_zh=weekday_zh,
+        tsx=tsx_index, taiex=taiex_index,
+        tsx_top=tsx_top, taiex_top=taiex_top,
+        tw_etfs=tw_etfs, ca_etfs=ca_etfs,
+        macro=macro, us_idx=us_idx,
+        portfolio=portfolio, n=narrative,
     )
 
-    # ---- Save ----
-    print("[4/4] Saving ...")
-    output_path = Path(args.output_dir) / f"daily-financial-brief-{date_iso}.html"
+    print("[4/5] Saving HTML ...")
+    html_filename = f"daily-financial-brief-{date_iso}.html"
+    output_path = Path(args.output_dir) / html_filename
     output_path.write_text(html, encoding="utf-8")
-    print(f"✅ Saved: {output_path}")
-    print(f"   Size: {output_path.stat().st_size:,} bytes")
+    print(f"  ✅ {output_path} ({output_path.stat().st_size:,} bytes)")
+
+    print("[5/5] Writing latest.json for downstream notification ...")
+    summary = {
+        "date":       date_iso,
+        "date_str":   date_str,
+        "weekday_zh": weekday_zh,
+        "tsx":        tsx_index,
+        "taiex":      taiex_index,
+        "filename":   html_filename,
+        "report_url": f"https://{config.USERNAME}.github.io/{config.REPO}/{html_filename}",
+    }
+    latest_path = Path(args.output_dir) / "latest.json"
+    latest_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  ✅ {latest_path}")
+
+    print("Done.")
 
 if __name__ == "__main__":
     main()
