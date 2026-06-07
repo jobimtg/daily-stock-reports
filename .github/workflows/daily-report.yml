@@ -2,8 +2,6 @@ name: Daily Stock Report (Canada / Full)
 
 on:
   schedule:
-    # 15:00 UTC = 08:00 AM Pacific (PDT)  /  07:00 AM Pacific (PST)
-    - cron: '0 15 * * *'
   workflow_dispatch:
 
 permissions:
