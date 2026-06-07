@@ -1,16 +1,16 @@
-name: Daily Stock Report (Canada / Full)
+name: Daily Stock Report (Taiwan / TW family)
 
 on:
   schedule:
-    # 15:00 UTC = 08:00 AM Pacific (PDT)  /  07:00 AM Pacific (PST)
-    - cron: '0 15 * * *'
+    # 00:00 UTC = 08:00 AM Taipei (UTC+8)
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  generate-report:
+  generate-tw-report:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -27,21 +27,21 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate full daily report
+      - name: Generate Taiwan-only report
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python scripts/generate_daily_report.py --region full
+          python scripts/generate_daily_report.py --region tw
 
       - name: Commit and push
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily-financial-brief-*.html latest.json
+          git add tw/daily-tw-brief-*.html tw/latest.json
           if git diff --staged --quiet; then
-            echo "No new full report to commit"
+            echo "No new TW report to commit"
           else
-            git commit -m "🤖 Daily full report"
+            git commit -m "🤖 Daily TW report"
             git pull --rebase origin main || true
             git push
           fi
@@ -49,10 +49,10 @@ jobs:
       - name: Wait for GitHub Pages to deploy
         run: sleep 45
 
-      - name: Send LINE notification (to me)
+      - name: Send LINE notification (to Taiwan family)
         continue-on-error: true
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_USER_ID:              ${{ secrets.LINE_USER_ID }}
+          LINE_USER_IDS_TW_FAMILY:   ${{ secrets.LINE_USER_IDS_TW_FAMILY }}
         run: |
-          python scripts/notify_line.py --audience me
+          python scripts/notify_line.py --audience tw_family
