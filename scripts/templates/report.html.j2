@@ -165,7 +165,7 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
 
   {% if 'top_taiex' in show or 'top_tsx' in show %}
   <section>
-    <h2><span class="num">{{ num.top_tsx if 'top_tsx' in show else num.top_taiex }}</span>{% if 'top_tsx' in show %}兩市場{% else %}台股{% endif %}重點股</h2>
+    <h2><span class="num">{{ num.top }}</span>{% if 'top_tsx' in show %}兩市場{% else %}台股{% endif %}重點股</h2>
 
     {% if 'top_tsx' in show %}
     <div class="subheading">🇨🇦 TSX（依今日漲跌幅 · {{ tsx_top|length }} 檔）</div>
