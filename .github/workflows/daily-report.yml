@@ -46,3 +46,15 @@ jobs:
           git add .
           git commit -m "Update daily financial report" || echo "No changes to commit"
           git push
+
+      - name: Send LINE notification
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: |
+          if [ -f scripts/notify_line.py ]; then
+            python scripts/notify_line.py
+          else
+            echo "scripts/notify_line.py not found"
+            exit 1
+          fi
