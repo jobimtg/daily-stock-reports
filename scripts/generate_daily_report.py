@@ -339,36 +339,35 @@ def main():
 
     # Section numbering map (only for sections that will render in this region)
 
-visible_sections = []
+    visible_sections = []
 
-if "tsx" in region_cfg["show_sections"]:
-    visible_sections.append("tsx")
+    if "tsx" in region_cfg["show_sections"]:
+        visible_sections.append("tsx")
 
-if "taiex" in region_cfg["show_sections"]:
-    visible_sections.append("taiex")
+    if "taiex" in region_cfg["show_sections"]:
+        visible_sections.append("taiex")
 
-if "etf_tw" in region_cfg["show_sections"] or "etf_ca" in region_cfg["show_sections"]:
-    visible_sections.append("etf")
+    if "etf_tw" in region_cfg["show_sections"] or "etf_ca" in region_cfg["show_sections"]:
+        visible_sections.append("etf")
 
-if "top_tsx" in region_cfg["show_sections"] or "top_taiex" in region_cfg["show_sections"]:
-    visible_sections.append("top")
+    if "top_tsx" in region_cfg["show_sections"] or "top_taiex" in region_cfg["show_sections"]:
+        visible_sections.append("top")
 
-if "macro" in region_cfg["show_sections"]:
-    visible_sections.append("macro")
+    if "macro" in region_cfg["show_sections"]:
+        visible_sections.append("macro")
 
-if "conclusion" in region_cfg["show_sections"]:
-    visible_sections.append("conclusion")
+    if "conclusion" in region_cfg["show_sections"]:
+        visible_sections.append("conclusion")
 
-if "portfolio" in region_cfg["show_sections"]:
-    visible_sections.append("portfolio")
+    if "portfolio" in region_cfg["show_sections"]:
+        visible_sections.append("portfolio")
 
-visible_sections.append("sources")
+    visible_sections.append("sources")
 
-nums = {
-    section: idx
-    for idx, section in enumerate(visible_sections, start=1)
-}
-
+    nums = {
+        section: idx
+        for idx, section in enumerate(visible_sections, start=1)
+    }
 
     html = template.render(
         region=args.region,
