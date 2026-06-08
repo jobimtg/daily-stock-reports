@@ -1,56 +1,48 @@
-name: Daily Stock Report (Canada / Full)
+name: Daily Financial Report
 
 on:
   schedule:
+    - cron: "0 15 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  generate-report:
+  build-report:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Create .nojekyll
+        run: touch .nojekyll
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Generate full daily report
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          python scripts/generate_daily_report.py --region full
-
-      - name: Commit and push
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily-financial-brief-*.html latest.json
-          if git diff --staged --quiet; then
-            echo "No new full report to commit"
-          else
-            git commit -m "🤖 Daily full report"
-            git pull --rebase origin main || true
-            git push
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
           fi
 
-      - name: Wait for GitHub Pages to deploy
-        run: sleep 45
-
-      - name: Send LINE notification (to me)
-        continue-on-error: true
-        env:
-          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_USER_ID:              ${{ secrets.LINE_USER_ID }}
+      - name: Generate daily report
         run: |
-          python scripts/notify_line.py --audience me
+          if [ -f scripts/generate_daily_report.py ]; then
+            python scripts/generate_daily_report.py
+          else
+            echo "scripts/generate_daily_report.py not found, skipping."
+          fi
+
+      - name: Commit and push report
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "Update daily financial report" || echo "No changes to commit"
+          git push
