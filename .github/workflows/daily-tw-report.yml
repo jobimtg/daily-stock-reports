@@ -1,7 +1,8 @@
-name: Daily Stock Report (Taiwan / TW family)
+name: Daily Stock Report (Taiwan / LINE group)
 
 on:
   schedule:
+    # Taiwan 08:00 = UTC 00:00
     - cron: "0 0 * * *"
   workflow_dispatch:
 
@@ -11,15 +12,19 @@ permissions:
 jobs:
   generate-tw-report:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Create .nojekyll
+        run: touch .nojekyll
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.11"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -36,7 +41,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tw/daily-tw-brief-*.html tw/latest.json
+          git add .nojekyll tw/daily-tw-brief-*.html tw/latest.json
           if git diff --staged --quiet; then
             echo "No new TW report to commit"
           else
@@ -48,10 +53,9 @@ jobs:
       - name: Wait for GitHub Pages to deploy
         run: sleep 45
 
-      - name: Send LINE notification (to Taiwan family)
-        continue-on-error: true
+      - name: Send LINE notification to family group
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_USER_IDS_TW_FAMILY:   ${{ secrets.LINE_USER_IDS_TW_FAMILY }}
+          LINE_GROUP_ID: ${{ secrets.LINE_GROUP_ID }}
         run: |
-          python scripts/notify_line.py --audience tw_family
+          python scripts/notify_line.py --audience tw_group
