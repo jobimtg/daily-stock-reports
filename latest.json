@@ -5,9 +5,9 @@
   "weekday_zh": "週日",
   "taiex": {
     "ticker": "^TWII",
-    "price": 43474.71875,
-    "change": -1596.22265625,
-    "change_pct": -3.541578246308055
+    "price": 43539.80078125,
+    "change": -1531.140625,
+    "change_pct": -3.3971791518596426
   },
   "tsx": {
     "ticker": "^GSPTSE",
