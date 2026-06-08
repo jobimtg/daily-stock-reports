@@ -46,7 +46,7 @@ jobs:
             echo "No new TW report to commit"
           else
             git commit -m "🤖 Daily TW report"
-            git pull --rebase origin main || true
+            git pull --rebase --autostash origin main || true
             git push
           fi
 
