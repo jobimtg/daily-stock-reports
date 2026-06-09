@@ -435,7 +435,7 @@ def main():
         tw_etfs=tw_etfs, ca_etfs=ca_etfs,
         macro=macro, us_idx=us_idx,
         portfolio=portfolio, n=narrative,
-        index_link=("../index.html" if args.region == "tw" else "index.html"),
+        index_link="../index.html",
     )
 
     # ---- Save ----
