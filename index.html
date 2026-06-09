@@ -12,11 +12,11 @@ html, body {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   min-height: 100vh; color: #fff; -webkit-font-smoothing: antialiased;
 }
-.container { max-width: 900px; margin: 0 auto; padding: 24px 16px 80px; }
+.container { max-width: 980px; margin: 0 auto; padding: 24px 16px 80px; }
 header { text-align: center; padding: 32px 0 28px; }
 .logo { font-size: 56px; margin-bottom: 8px; }
 h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
-.tagline { color: #a8b2d1; font-size: 14px; }
+.tagline { color: #a8b2d1; font-size: 14px; line-height: 1.5; }
 .stats {
   display: flex; gap: 12px; margin: 24px 0;
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
@@ -26,11 +26,16 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6
 .stat-num { font-size: 22px; font-weight: 700; color: #64ffda; }
 .stat-label { font-size: 11px; color: #a8b2d1; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
 .stat + .stat { border-left: 1px solid rgba(255,255,255,0.08); }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.panel {
+  background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 14px;
+}
 .section-title {
-  font-size: 13px; font-weight: 600; color: #a8b2d1;
-  text-transform: uppercase; letter-spacing: 1px;
-  margin: 28px 0 12px; padding-left: 4px;
-  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: #dbe4ff;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  margin: 4px 0 12px; padding: 0 2px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .section-title .count {
   background: rgba(100,255,218,0.15); color: #64ffda;
@@ -52,14 +57,15 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: 11px; color: #fff;
 }
-.icon-daily { background: linear-gradient(135deg, #667eea, #764ba2); }
+.icon-canada { background: linear-gradient(135deg, #d53369, #daae51); }
+.icon-taiwan { background: linear-gradient(135deg, #11998e, #38ef7d); }
 .card .info { flex: 1; min-width: 0; }
 .card .title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
 .card .meta { font-size: 12px; color: #a8b2d1; }
 .card .arrow { color: #64ffda; font-size: 22px; flex-shrink: 0; }
-.empty { text-align: center; padding: 40px 20px; color: #a8b2d1; font-size: 14px;
+.empty { text-align: center; padding: 34px 18px; color: #a8b2d1; font-size: 14px;
   background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px; }
-.empty .big { font-size: 36px; margin-bottom: 8px; }
+.empty .big { font-size: 34px; margin-bottom: 8px; }
 .loading { text-align: center; padding: 40px 20px; color: #a8b2d1; }
 .spinner {
   display: inline-block; width: 24px; height: 24px;
@@ -67,8 +73,16 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6
   border-radius: 50%; animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.notice {
+  margin-top: 16px; color: #a8b2d1; font-size: 12px; line-height: 1.6;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  padding: 12px 14px; border-radius: 12px;
+}
 footer { text-align: center; margin-top: 40px; padding: 20px 0; color: #6e7891; font-size: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
 footer a { color: #64ffda; text-decoration: none; }
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 480px) {
   h1 { font-size: 24px; }
   .stat-num { font-size: 18px; }
@@ -82,28 +96,32 @@ footer a { color: #64ffda; text-decoration: none; }
   <header>
     <div class="logo">📈</div>
     <h1>Daily Stock Reports</h1>
-    <p class="tagline">完整版（TSX + TAIEX + Portfolio）</p>
+    <p class="tagline">Canada + Taiwan reports are organized into separate folders.</p>
   </header>
 
   <div class="stats">
     <div class="stat">
       <div class="stat-num" id="total-count">—</div>
-      <div class="stat-label">Reports</div>
+      <div class="stat-label">Total Reports</div>
     </div>
     <div class="stat">
-      <div class="stat-num" id="latest-date">—</div>
-      <div class="stat-label">Latest</div>
+      <div class="stat-num" id="canada-count">—</div>
+      <div class="stat-label">Canada</div>
     </div>
     <div class="stat">
-      <div class="stat-num">CAD</div>
-      <div class="stat-label">Currency</div>
+      <div class="stat-num" id="taiwan-count">—</div>
+      <div class="stat-label">Taiwan</div>
     </div>
   </div>
 
   <div id="content"><div class="loading"><div class="spinner"></div></div></div>
 
+  <div class="notice">
+    Folder structure: <strong>/canada/</strong> for full financial reports and <strong>/taiwan/</strong> for Taiwan-only reports.
+  </div>
+
   <footer>
-    Hosted on GitHub Pages · Generated by <a href="https://claude.com">Claude</a>
+    Hosted on GitHub Pages · Generated by automation
   </footer>
 </div>
 
@@ -111,12 +129,15 @@ footer a { color: #64ffda; text-decoration: none; }
 const USERNAME = 'jobimtg';
 const REPO = 'daily-stock-reports';
 
-async function fetchRoot() {
+async function fetchFolder(path) {
   try {
-    const r = await fetch(`https://api.github.com/repos/${USERNAME}/${REPO}/contents/`);
+    const r = await fetch(`https://api.github.com/repos/${USERNAME}/${REPO}/contents/${path}`);
     if (!r.ok) return [];
-    return await r.json();
-  } catch (e) { return []; }
+    const data = await r.json();
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    return [];
+  }
 }
 
 function parseDate(name) {
@@ -131,16 +152,19 @@ function fmtDate(d) {
   return `${d.year}/${d.month}/${d.day}（${wd}）`;
 }
 
-function makeCard(file) {
+function makeCard(file, folder, type) {
   const d = parseDate(file.name);
   const dateStr = fmtDate(d);
-  const sizeKB = (file.size / 1024).toFixed(1);
+  const sizeKB = file.size ? (file.size / 1024).toFixed(1) : '—';
   const badge = d ? `${d.month}/${d.day}` : 'NEW';
+  const title = type === 'canada' ? '加拿大完整財經晨報' : '台灣台股晨報';
+  const iconClass = type === 'canada' ? 'icon-canada' : 'icon-taiwan';
+
   return `
-    <a class="card" href="${encodeURIComponent(file.name)}">
-      <div class="icon icon-daily">${badge}</div>
+    <a class="card" href="${folder}/${encodeURIComponent(file.name)}">
+      <div class="icon ${iconClass}">${badge}</div>
       <div class="info">
-        <div class="title">財經晨報</div>
+        <div class="title">${title}</div>
         <div class="meta">${dateStr} · ${sizeKB} KB</div>
       </div>
       <div class="arrow">›</div>
@@ -148,28 +172,52 @@ function makeCard(file) {
   `;
 }
 
+function renderSection(title, emoji, files, folder, type) {
+  if (!files.length) {
+    return `
+      <div class="panel">
+        <div class="section-title"><span>${emoji} ${title}</span><span class="count">0</span></div>
+        <div class="empty"><div class="big">📭</div>目前還沒有報告</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="panel">
+      <div class="section-title"><span>${emoji} ${title}</span><span class="count">${files.length}</span></div>
+      <div class="reports">${files.map(f => makeCard(f, folder, type)).join('')}</div>
+    </div>
+  `;
+}
+
 async function load() {
-  const files = await fetchRoot();
-  const daily = files.filter(f =>
+  const [canadaRaw, taiwanRaw] = await Promise.all([
+    fetchFolder('canada'),
+    fetchFolder('taiwan')
+  ]);
+
+  const canada = canadaRaw.filter(f =>
     f.type === 'file' &&
     f.name.toLowerCase().startsWith('daily-financial-brief-') &&
     f.name.toLowerCase().endsWith('.html')
   ).sort((a, b) => b.name.localeCompare(a.name));
 
-  document.getElementById('total-count').textContent = daily.length;
-  if (daily.length > 0) {
-    const d = parseDate(daily[0].name);
-    if (d) document.getElementById('latest-date').textContent = `${d.month}/${d.day}`;
-  }
+  const taiwan = taiwanRaw.filter(f =>
+    f.type === 'file' &&
+    f.name.toLowerCase().startsWith('daily-tw-brief-') &&
+    f.name.toLowerCase().endsWith('.html')
+  ).sort((a, b) => b.name.localeCompare(a.name));
 
-  let html = '';
-  if (daily.length) {
-    html += `<div class="section-title">📈 每日財經晨報 <span class="count">${daily.length}</span></div>`;
-    html += '<div class="reports">' + daily.map(makeCard).join('') + '</div>';
-  } else {
-    html = `<div class="empty"><div class="big">📭</div>還沒有報告。</div>`;
-  }
-  document.getElementById('content').innerHTML = html;
+  document.getElementById('total-count').textContent = canada.length + taiwan.length;
+  document.getElementById('canada-count').textContent = canada.length;
+  document.getElementById('taiwan-count').textContent = taiwan.length;
+
+  document.getElementById('content').innerHTML = `
+    <div class="grid">
+      ${renderSection('Canada Reports', '🇨🇦', canada, 'canada', 'canada')}
+      ${renderSection('Taiwan Reports', '🇹🇼', taiwan, 'taiwan', 'taiwan')}
+    </div>
+  `;
 }
 
 load();
