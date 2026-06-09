@@ -30,6 +30,7 @@ import config
 SCRIPT_DIR   = Path(__file__).parent
 ROOT_DIR     = SCRIPT_DIR.parent
 TEMPLATE_DIR = SCRIPT_DIR / "templates"
+CACHE_DIR    = ROOT_DIR / "cache"
 
 # ============================================================
 # Helpers
