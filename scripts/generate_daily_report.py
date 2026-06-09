@@ -149,30 +149,82 @@ PROMPT_TW = """你是一位專業的繁體中文財經分析師。針對台灣�
   "suggestion": "1 段針對台股的簡短建議"
 }}"""
 
+def _extract_gemini_json(text):
+    text = (text or "").strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text
+        if text.endswith("```"):
+            text = text.rsplit("```", 1)[0]
+        text = text.strip()
+        if text.startswith("json"):
+            text = text[4:].strip()
+    return json.loads(text)
+
+
+def _gemini_cache_file(prompt):
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:20]
+    return CACHE_DIR / f"gemini_{prompt_hash}.json"
+
+
 def call_gemini(prompt):
+    cache_file = _gemini_cache_file(prompt)
+
+    if cache_file.exists():
+        try:
+            print(f"  Using Gemini cache: {cache_file.name}")
+            return json.loads(cache_file.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"  [warn] Gemini cache invalid, ignoring: {e}", file=sys.stderr)
+
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("[warn] GEMINI_API_KEY not set, using fallback narrative")
         return None
+
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel("gemini-2.5-flash")
-    try:
-        resp = model.generate_content(prompt)
-        text = resp.text.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1] if "\n" in text else text
-            if text.endswith("```"):
-                text = text.rsplit("```", 1)[0]
-            text = text.strip()
-            if text.startswith("json"):
-                text = text[4:].strip()
-        return json.loads(text)
-    except json.JSONDecodeError as e:
-        print(f"[error] Gemini returned invalid JSON: {e}", file=sys.stderr)
-        return None
-    except Exception as e:
-        print(f"[error] Gemini call failed: {e}", file=sys.stderr)
-        return None
+
+    retry_waits = [60, 120, 180]
+
+    for attempt, wait_seconds in enumerate([0] + retry_waits, start=1):
+        if wait_seconds:
+            print(f"  Waiting {wait_seconds}s before Gemini retry #{attempt} ...")
+            time.sleep(wait_seconds)
+
+        try:
+            resp = model.generate_content(prompt)
+            narrative = _extract_gemini_json(resp.text)
+
+            cache_file.write_text(
+                json.dumps(narrative, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            print(f"  Saved Gemini cache: {cache_file.name}")
+            return narrative
+
+        except json.JSONDecodeError as e:
+            print(f"[error] Gemini returned invalid JSON: {e}", file=sys.stderr)
+            return None
+
+        except Exception as e:
+            err = str(e)
+            is_retryable = (
+                "429" in err
+                or "quota" in err.lower()
+                or "resource_exhausted" in err.lower()
+                or "temporarily" in err.lower()
+                or "timeout" in err.lower()
+                or "503" in err
+                or "500" in err
+            )
+
+            print(f"[error] Gemini call failed on attempt {attempt}: {e}", file=sys.stderr)
+
+            if not is_retryable or attempt >= 1 + len(retry_waits):
+                return None
+
+    return None
 
 def fallback_full(tsx, taiex):
     tsx_dir = "上漲" if (tsx and (tsx.get("change_pct") or 0) > 0) else "下跌"
