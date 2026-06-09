@@ -74,8 +74,6 @@ TAIEX_UNIVERSE = [
     {"ticker": "6770.TW", "name": "力積電",    "sector": "晶圓代工","core": False},
     {"ticker": "8046.TW", "name": "南電",      "sector": "PCB",     "core": False},
 
-    if no_data:
-    continue
 ]
 
 # ============================================================
