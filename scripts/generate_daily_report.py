@@ -466,6 +466,16 @@ def main():
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  ✅ {summary_path}")
+
+    # Backward compatibility for older notification scripts.
+    # Some existing LINE/email notification code may still read tw/latest.json.
+    # Keep a small compatibility copy without placing daily HTML reports in /tw/.
+    if args.region == "tw":
+        legacy_summary_path = out_root / "tw" / "latest.json"
+        legacy_summary_path.parent.mkdir(parents=True, exist_ok=True)
+        legacy_summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"  ✅ {legacy_summary_path} (compatibility copy)")
+
     print("Done.")
 
 if __name__ == "__main__":
