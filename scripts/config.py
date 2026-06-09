@@ -68,7 +68,7 @@ TAIEX_UNIVERSE = [
     {"ticker": "3711.TW", "name": "日月光投控","sector": "封測",    "core": False},
     {"ticker": "4904.TW", "name": "遠傳",      "sector": "電信",    "core": False},
     {"ticker": "4938.TW", "name": "和碩",      "sector": "代工",    "core": False},
-    {"ticker": "5871.TWO","name": "中租-KY",   "sector": "金融",    "core": False},
+    {"ticker": "5871.TW","name": "中租-KY",   "sector": "金融",    "core": False},
     {"ticker": "5880.TW", "name": "合庫金",    "sector": "金融",    "core": False},
     {"ticker": "6505.TW", "name": "台塑化",    "sector": "塑化",    "core": False},
     {"ticker": "6770.TW", "name": "力積電",    "sector": "晶圓代工","core": False},
