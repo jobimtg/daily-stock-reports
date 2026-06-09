@@ -17,29 +17,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create .nojekyll
-        run: touch .nojekyll
+      - name: Prepare repository
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git pull --rebase --autostash origin main || true
+          touch .nojekyll
+          mkdir -p canada cache
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
 
       - name: Move old Canada reports into canada folder
         run: |
-          mkdir -p canada
           shopt -s nullglob
           for file in daily-financial-brief-*.html; do
             if [ -f "$file" ]; then
               git mv "$file" "canada/$file" || mv "$file" "canada/$file"
             fi
           done
+
           if [ -f latest.json ]; then
             git mv latest.json canada/latest.json || mv latest.json canada/latest.json
           fi
@@ -52,12 +59,7 @@ jobs:
 
       - name: Commit and push repo
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-          git pull --rebase --autostash origin main || true
-
-          git add             .nojekyll             index.html             canada/*.html             canada/latest.json             cache/*.json
+          git add .nojekyll index.html canada cache
 
           if git diff --staged --quiet; then
             echo "No new Canada report"
