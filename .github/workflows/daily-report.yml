@@ -31,38 +31,37 @@ jobs:
             pip install -r requirements.txt
           fi
 
-      - name: Generate daily report
+      - name: Move old Canada reports into canada folder
+        run: |
+          mkdir -p canada
+          shopt -s nullglob
+          for file in daily-financial-brief-*.html; do
+            if [ -f "$file" ]; then
+              git mv "$file" "canada/$file" || mv "$file" "canada/$file"
+            fi
+          done
+          if [ -f latest.json ]; then
+            git mv latest.json canada/latest.json || mv latest.json canada/latest.json
+          fi
+
+      - name: Generate Canada report
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          if [ -f scripts/generate_daily_report.py ]; then
-            python scripts/generate_daily_report.py --region full
-          else
-            echo "scripts/generate_daily_report.py not found, skipping."
-          fi
+          python scripts/generate_daily_report.py --region full
 
-      - name: Commit and push report
+      - name: Commit and push repo
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
           git pull --rebase --autostash origin main || true
 
-          git add .nojekyll daily-financial-brief-*.html latest.json index.html cache/*.json
+          git add             .nojekyll             index.html             canada/*.html             canada/latest.json             cache/*.json
 
           if git diff --staged --quiet; then
-            echo "No new full report to commit"
+            echo "No new Canada report"
           else
-            git commit -m "Update daily financial report" || echo "No changes to commit"
+            git commit -m "Update Canada daily report"
             git push || (git pull --rebase --autostash origin main && git push)
           fi
-
-      - name: Wait for GitHub Pages to deploy
-        run: sleep 45
-
-      - name: Send LINE notification
-        env:
-          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
-        run: |
-          python scripts/notify_line.py --audience me
