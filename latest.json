@@ -5,15 +5,15 @@
   "weekday_zh": "週一",
   "taiex": {
     "ticker": "^TWII",
-    "price": 45070.94140625,
-    "change": -606.51953125,
-    "change_pct": -1.3278310983176023
+    "price": 44643.33984375,
+    "change": 1140.55859375,
+    "change_pct": 2.621806148888469
   },
   "tsx": {
     "ticker": "^GSPTSE",
-    "price": 34478.73828125,
-    "change": 65.23828125,
-    "change_pct": 0.1895717705261017
+    "price": 34478.69921875,
+    "change": 65.19921875,
+    "change_pct": 0.1894582612928066
   },
   "filename": "daily-financial-brief-2026-06-08.html",
   "report_url": "https://jobimtg.github.io/daily-stock-reports/daily-financial-brief-2026-06-08.html"
