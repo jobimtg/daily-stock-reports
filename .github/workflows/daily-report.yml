@@ -31,9 +31,11 @@ jobs:
           fi
 
       - name: Generate daily report
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           if [ -f scripts/generate_daily_report.py ]; then
-            python scripts/generate_daily_report.py
+            python scripts/generate_daily_report.py --region full
           else
             echo "scripts/generate_daily_report.py not found, skipping."
           fi
