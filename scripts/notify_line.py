@@ -1,10 +1,15 @@
 """
-LINE Messaging API Push Notification (v5 - tech blue carousel)
---------------------------------------------------------------
-Flex Message design:
-  1) Market Dashboard
-  2) Today's Focus News
-  3) Portfolio Performance
+LINE Messaging API Push Notification (v5 - individual, family multicast, group)
+-------------------------------------------------------------------------------
+Audiences:
+  --audience me         -> LINE_USER_ID, canada/latest.json
+  --audience tw_family  -> LINE_USER_IDS_TW_FAMILY, taiwan/latest.json
+  --audience tw_group   -> LINE_GROUP_ID, taiwan/latest.json
+
+Features:
+  - Uses new canada/ and taiwan/ summary paths.
+  - Prevents duplicate pushes for the same audience/date.
+  - Use LINE_FORCE_PUSH=true to intentionally send again.
 """
 
 import os
@@ -17,49 +22,39 @@ import urllib.error
 
 LINE_PUSH_URL = "https://api.line.me/v2/bot/message/push"
 LINE_MULTICAST_URL = "https://api.line.me/v2/bot/message/multicast"
+PUSH_LOG_PATH = Path("cache/line_push_log.json")
 
-# =========================
-# Tech Blue Theme
-# =========================
-COLOR_BG_HEADER = "#071A2F"
-COLOR_BG_BODY = "#0B2545"
-COLOR_BG_FOOTER = "#071A2F"
-COLOR_PANEL = "#123B63"
-COLOR_PANEL_DARK = "#0E2F50"
-COLOR_ACCENT = "#38BDF8"
-COLOR_GREEN = "#22C55E"
-COLOR_RED = "#F87171"
-COLOR_FLAT = "#A8B2D1"
-COLOR_TEXT = "#FFFFFF"
-COLOR_MUTED = "#B8C7E0"
-COLOR_LINE = "#1E5A8A"
+COLOR_BG_HEADER = "#1a1a2e"
+COLOR_ACCENT = "#64ffda"
+COLOR_GREEN = "#51cf66"
+COLOR_RED = "#ff6b6b"
+COLOR_FLAT = "#a8b2d1"
+COLOR_TEXT = "#ffffff"
 
 AUDIENCE_CFG = {
     "me": {
-        "summary_path": "latest.json",
+        "summary_path": "canada/latest.json",
         "target_env": "LINE_USER_ID",
         "mode": "push",
-        "hero_icon": "🇨🇦",
-        "card_title": "每日北美財經晨報",
-        "card_subtitle": "Canada · US · Portfolio",
+        "card_title": "📈 北美財經晨報",
+        "card_subtitle": "完整版（含投資組合）",
     },
     "tw_family": {
-        "summary_path": "tw/latest.json",
+        "summary_path": "taiwan/latest.json",
         "target_env": "LINE_USER_IDS_TW_FAMILY",
         "mode": "multicast",
-        "hero_icon": "🇹🇼",
-        "card_title": "每日台股晨報",
+        "card_title": "📈 每日台股晨報",
         "card_subtitle": "Taiwan Market Daily Brief",
     },
     "tw_group": {
-        "summary_path": "tw/latest.json",
+        "summary_path": "taiwan/latest.json",
         "target_env": "LINE_GROUP_ID",
         "mode": "push",
-        "hero_icon": "🇹🇼",
-        "card_title": "每日台股晨報",
+        "card_title": "📈 每日台股晨報",
         "card_subtitle": "Taiwan Market Daily Brief",
     },
 }
+
 
 def fmt_pct(p):
     if p is None:
@@ -67,201 +62,175 @@ def fmt_pct(p):
     sign = "+" if p >= 0 else ""
     return f"{sign}{p:.2f}%"
 
+
 def fmt_price(p):
     if p is None:
         return "—"
     return f"{p:,.2f}"
+
 
 def color_for(pct):
     if pct is None or abs(pct) < 0.05:
         return COLOR_FLAT
     return COLOR_GREEN if pct > 0 else COLOR_RED
 
+
 def arrow_for(pct):
     if pct is None or abs(pct) < 0.05:
         return "→"
     return "▲" if pct > 0 else "▼"
 
-def trend_text(pct):
-    if pct is None:
-        return "資料更新中"
-    if abs(pct) < 0.05:
-        return "盤勢持平"
-    return "上漲" if pct > 0 else "下跌"
 
-def safe_text(value, default="—"):
-    if value is None:
-        return default
-    text = str(value).strip()
-    return text if text else default
+def read_push_log():
+    if not PUSH_LOG_PATH.exists():
+        return {}
+    try:
+        return json.loads(PUSH_LOG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def write_push_log(log):
+    PUSH_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PUSH_LOG_PATH.write_text(json.dumps(log, ensure_ascii=False, indent=2), encoding="utf-8")
+
 
 def build_index_row(name_emoji, label, data):
     pct = data.get("change_pct") if data else None
-    price = data.get("price") if data else None
     return {
         "type": "box",
-        "layout": "vertical",
-        "backgroundColor": COLOR_PANEL,
-        "cornerRadius": "12px",
-        "paddingAll": "12px",
-        "spacing": "xs",
+        "layout": "horizontal",
+        "spacing": "sm",
         "contents": [
-            {"type": "box", "layout": "horizontal", "contents": [
-                {"type": "text", "text": f"{name_emoji} {label}", "size": "md", "color": COLOR_TEXT, "weight": "bold", "flex": 4},
-                {"type": "text", "text": f"{arrow_for(pct)} {fmt_pct(pct)}", "size": "sm", "color": color_for(pct), "weight": "bold", "align": "end", "flex": 3},
-            ]},
-            {"type": "box", "layout": "horizontal", "contents": [
-                {"type": "text", "text": trend_text(pct), "size": "xs", "color": COLOR_MUTED, "flex": 3},
-                {"type": "text", "text": fmt_price(price), "size": "xs", "color": COLOR_TEXT, "align": "end", "weight": "bold", "flex": 4},
-            ]},
+            {
+                "type": "text",
+                "text": f"{name_emoji} {label}",
+                "size": "sm",
+                "color": "#a8b2d1",
+                "flex": 3,
+            },
+            {
+                "type": "text",
+                "text": fmt_price(data.get("price")) if data else "—",
+                "size": "sm",
+                "color": COLOR_TEXT,
+                "weight": "bold",
+                "align": "end",
+                "flex": 3,
+            },
+            {
+                "type": "text",
+                "text": f"{arrow_for(pct)} {fmt_pct(pct)}",
+                "size": "sm",
+                "color": color_for(pct),
+                "weight": "bold",
+                "align": "end",
+                "flex": 3,
+            },
         ],
     }
 
-def build_header(cfg, date_str, weekday_zh, page_label):
-    return {
-        "type": "box",
-        "layout": "vertical",
-        "backgroundColor": COLOR_BG_HEADER,
-        "paddingAll": "16px",
-        "spacing": "xs",
-        "contents": [
-            {"type": "text", "text": f"{cfg['hero_icon']} {cfg['card_title']}", "color": COLOR_TEXT, "size": "lg", "weight": "bold"},
-            {"type": "text", "text": cfg["card_subtitle"], "color": COLOR_MUTED, "size": "xs"},
-            {"type": "text", "text": f"{date_str}（{weekday_zh}） · {page_label}", "color": COLOR_ACCENT, "size": "xs", "weight": "bold"},
-        ],
-    }
-
-def build_footer(url, label):
-    return {
-        "type": "box",
-        "layout": "vertical",
-        "backgroundColor": COLOR_BG_FOOTER,
-        "paddingAll": "12px",
-        "contents": [{
-            "type": "button",
-            "style": "primary",
-            "height": "sm",
-            "color": COLOR_ACCENT,
-            "action": {"type": "uri", "label": label, "uri": url or "https://example.com"},
-        }],
-    }
-
-def bubble_base(header, body_contents, footer):
-    return {
-        "type": "bubble",
-        "size": "mega",
-        "header": header,
-        "body": {"type": "box", "layout": "vertical", "spacing": "md", "backgroundColor": COLOR_BG_BODY, "paddingAll": "16px", "contents": body_contents},
-        "footer": footer,
-        "styles": {"header": {"backgroundColor": COLOR_BG_HEADER}, "body": {"backgroundColor": COLOR_BG_BODY}, "footer": {"backgroundColor": COLOR_BG_FOOTER}},
-    }
-
-def normalize_news(summary):
-    candidates = summary.get("news") or summary.get("top_news") or summary.get("focus_news") or summary.get("headlines") or []
-    news_items = []
-    if isinstance(candidates, list):
-        for item in candidates[:3]:
-            if isinstance(item, dict):
-                title = item.get("title") or item.get("headline") or item.get("text")
-                source = item.get("source") or item.get("publisher") or "Market News"
-            else:
-                title = str(item)
-                source = "Market News"
-            if title:
-                news_items.append({"title": str(title), "source": str(source)})
-    if not news_items:
-        news_items = [
-            {"title": "今日焦點新聞會依 latest.json 內容自動顯示", "source": "System"},
-            {"title": "若 latest.json 沒有 news 欄位，這裡會先顯示預設文字", "source": "System"},
-            {"title": "之後可在 generate_daily_report.py 加入 headlines/news 資料", "source": "System"},
-        ]
-    return news_items[:3]
-
-def normalize_portfolio(summary):
-    portfolio = summary.get("portfolio") or summary.get("portfolio_summary") or {}
-    if not isinstance(portfolio, dict):
-        portfolio = {}
-    return {
-        "total_value": portfolio.get("total_value") or portfolio.get("market_value") or summary.get("portfolio_value"),
-        "day_change_pct": portfolio.get("day_change_pct") or portfolio.get("change_pct") or summary.get("portfolio_change_pct"),
-        "top_winner": portfolio.get("top_winner") or portfolio.get("best") or summary.get("top_winner") or "資料更新中",
-        "top_loser": portfolio.get("top_loser") or portfolio.get("worst") or summary.get("top_loser") or "資料更新中",
-    }
-
-def build_market_bubble(summary, audience):
-    cfg = AUDIENCE_CFG[audience]
-    date_str = summary.get("date_str", "")
-    weekday_zh = summary.get("weekday_zh", "")
-    url = summary.get("report_url", "")
-    body_contents = [{"type": "text", "text": "Market Dashboard", "size": "sm", "color": COLOR_ACCENT, "weight": "bold"}]
-    if summary.get("tsx") and audience == "me":
-        body_contents.append(build_index_row("🇨🇦", "TSX", summary.get("tsx")))
-    body_contents.append(build_index_row("🇹🇼", "TAIEX", summary.get("taiex")))
-    body_contents.append({"type": "separator", "color": COLOR_LINE, "margin": "md"})
-    body_contents.append({"type": "text", "text": "ETF · Top 15/25 · Macro · 投資組合", "size": "xxs", "color": COLOR_MUTED, "align": "center", "margin": "md"})
-    return bubble_base(build_header(cfg, date_str, weekday_zh, "1/3 市場"), body_contents, build_footer(url, "查看完整報告"))
-
-def build_news_bubble(summary, audience):
-    cfg = AUDIENCE_CFG[audience]
-    date_str = summary.get("date_str", "")
-    weekday_zh = summary.get("weekday_zh", "")
-    url = summary.get("report_url", "")
-    body_contents = [{"type": "text", "text": "📰 今日焦點新聞", "size": "md", "color": COLOR_TEXT, "weight": "bold"}]
-    for idx, item in enumerate(normalize_news(summary), start=1):
-        body_contents.append({"type": "box", "layout": "vertical", "backgroundColor": COLOR_PANEL, "cornerRadius": "12px", "paddingAll": "12px", "spacing": "xs", "contents": [
-            {"type": "text", "text": f"{idx}. {safe_text(item.get('title'))}", "size": "sm", "color": COLOR_TEXT, "weight": "bold", "wrap": True},
-            {"type": "text", "text": safe_text(item.get("source"), "Market News"), "size": "xxs", "color": COLOR_MUTED, "wrap": True},
-        ]})
-    return bubble_base(build_header(cfg, date_str, weekday_zh, "2/3 新聞"), body_contents, build_footer(url, "閱讀完整新聞"))
-
-def build_portfolio_bubble(summary, audience):
-    cfg = AUDIENCE_CFG[audience]
-    date_str = summary.get("date_str", "")
-    weekday_zh = summary.get("weekday_zh", "")
-    url = summary.get("report_url", "")
-    p = normalize_portfolio(summary)
-    change_pct = p["day_change_pct"]
-    try:
-        change_pct = float(change_pct) if change_pct is not None else None
-    except Exception:
-        change_pct = None
-    try:
-        total_text = f"${float(p['total_value']):,.2f}" if p["total_value"] is not None else "資料更新中"
-    except Exception:
-        total_text = safe_text(p["total_value"], "資料更新中")
-    body_contents = [
-        {"type": "text", "text": "💼 投資組合績效", "size": "md", "color": COLOR_TEXT, "weight": "bold"},
-        {"type": "box", "layout": "vertical", "backgroundColor": COLOR_PANEL_DARK, "cornerRadius": "14px", "paddingAll": "14px", "spacing": "xs", "contents": [
-            {"type": "text", "text": "目前市值", "size": "xs", "color": COLOR_MUTED},
-            {"type": "text", "text": total_text, "size": "xxl", "color": COLOR_TEXT, "weight": "bold"},
-            {"type": "text", "text": f"{arrow_for(change_pct)} 今日變化 {fmt_pct(change_pct)}", "size": "sm", "color": color_for(change_pct), "weight": "bold"},
-        ]},
-        {"type": "box", "layout": "vertical", "backgroundColor": COLOR_PANEL, "cornerRadius": "12px", "paddingAll": "12px", "spacing": "xs", "contents": [
-            {"type": "text", "text": f"🏆 表現最佳：{safe_text(p['top_winner'], '資料更新中')}", "size": "sm", "color": COLOR_TEXT, "wrap": True},
-            {"type": "text", "text": f"⚠️ 需要留意：{safe_text(p['top_loser'], '資料更新中')}", "size": "sm", "color": COLOR_TEXT, "wrap": True},
-        ]},
-    ]
-    return bubble_base(build_header(cfg, date_str, weekday_zh, "3/3 投資組合"), body_contents, build_footer(url, "查看投資組合"))
 
 def build_flex_message(summary, audience):
     cfg = AUDIENCE_CFG[audience]
     date_str = summary.get("date_str", "")
-    return {
-        "type": "flex",
-        "altText": f"{cfg['hero_icon']} {cfg['card_title']} {date_str}",
-        "contents": {
-            "type": "carousel",
+    weekday_zh = summary.get("weekday_zh", "")
+    tsx = summary.get("tsx")
+    taiex = summary.get("taiex")
+    url = summary.get("report_url", "")
+
+    body_contents = []
+    if tsx and audience == "me":
+        body_contents.append(build_index_row("🇨🇦", "TSX", tsx))
+        body_contents.append({"type": "separator", "color": "#2a3a5e"})
+
+    body_contents.append(build_index_row("🇹🇼", "TAIEX", taiex))
+    body_contents.append({
+        "type": "text",
+        "text": "ETF 25 · Top 25 · Macro" if audience in ("tw_family", "tw_group") else "ETF · Top 15/25 · Macro · 投資組合",
+        "size": "xxs",
+        "color": "#6e7891",
+        "align": "center",
+        "margin": "md",
+    })
+
+    bubble = {
+        "type": "bubble",
+        "size": "kilo",
+        "header": {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": COLOR_BG_HEADER,
+            "paddingAll": "16px",
+            "spacing": "xs",
             "contents": [
-                build_market_bubble(summary, audience),
-                build_news_bubble(summary, audience),
-                build_portfolio_bubble(summary, audience),
+                {
+                    "type": "text",
+                    "text": cfg["card_title"],
+                    "color": COLOR_TEXT,
+                    "size": "lg",
+                    "weight": "bold",
+                },
+                {
+                    "type": "text",
+                    "text": f"{date_str}（{weekday_zh}）",
+                    "color": COLOR_ACCENT,
+                    "size": "xs",
+                },
             ],
+        },
+        "body": {
+            "type": "box",
+            "layout": "vertical",
+            "spacing": "md",
+            "backgroundColor": "#16213e",
+            "paddingAll": "16px",
+            "contents": body_contents,
+        },
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#0f3460",
+            "paddingAll": "12px",
+            "contents": [
+                {
+                    "type": "button",
+                    "style": "primary",
+                    "color": COLOR_ACCENT,
+                    "action": {
+                        "type": "uri",
+                        "label": "查看完整報告",
+                        "uri": url,
+                    },
+                }
+            ],
+        },
+        "styles": {
+            "header": {"backgroundColor": COLOR_BG_HEADER},
+            "body": {"backgroundColor": "#16213e"},
+            "footer": {"backgroundColor": "#0f3460"},
         },
     }
 
+    return {
+        "type": "flex",
+        "altText": f"{cfg['card_title']} {date_str}",
+        "contents": bubble,
+    }
+
+
 def post_json(url, payload, token):
     body = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=body, method="POST", headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+    )
+
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
             print(f"[ok] LINE {url.rsplit('/', 1)[-1]}: {resp.status}")
@@ -274,25 +243,40 @@ def post_json(url, payload, token):
         print(f"[error] LINE connection failed: {e}", file=sys.stderr)
         return False
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--audience", choices=["me", "tw_family", "tw_group"], required=True)
     args = parser.parse_args()
+
     cfg = AUDIENCE_CFG[args.audience]
     token = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN")
     if not token:
         print("[error] LINE_CHANNEL_ACCESS_TOKEN not set.", file=sys.stderr)
         return 1
+
     target_raw = os.environ.get(cfg["target_env"])
     if not target_raw:
         print(f"[error] {cfg['target_env']} not set.", file=sys.stderr)
         return 1
+
     summary_path = Path(cfg["summary_path"])
     if not summary_path.exists():
         print(f"[error] {summary_path} not found", file=sys.stderr)
         return 1
+
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    report_date = summary.get("date", "unknown-date")
+    push_key = f"{args.audience}:{report_date}"
+    force_push = os.environ.get("LINE_FORCE_PUSH", "false").lower() == "true"
+
+    push_log = read_push_log()
+    if push_key in push_log and not force_push:
+        print(f"[skip] LINE already pushed for {push_key}. Set LINE_FORCE_PUSH=true to send again.")
+        return 0
+
     message = build_flex_message(summary, args.audience)
+
     if cfg["mode"] == "multicast":
         user_ids = [u.strip() for u in target_raw.split(",") if u.strip()]
         if not user_ids:
@@ -301,9 +285,20 @@ def main():
         payload = {"to": user_ids, "messages": [message]}
         ok = post_json(LINE_MULTICAST_URL, payload, token)
     else:
-        payload = {"to": target_raw.strip(), "messages": [message]}
+        target = target_raw.strip()
+        payload = {"to": target, "messages": [message]}
         ok = post_json(LINE_PUSH_URL, payload, token)
+
+    if ok:
+        push_log[push_key] = {
+            "audience": args.audience,
+            "date": report_date,
+            "report_url": summary.get("report_url", ""),
+        }
+        write_push_log(push_log)
+
     return 0 if ok else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())
