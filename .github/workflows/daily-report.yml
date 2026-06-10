@@ -5,6 +5,17 @@ on:
     # Vancouver 08:00 PDT = UTC 15:00
     - cron: "0 15 * * *"
   workflow_dispatch:
+    inputs:
+      send_line:
+        description: "Send LINE notification after manual run"
+        required: false
+        type: boolean
+        default: false
+      force_line:
+        description: "Force LINE notification even if already sent today"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -12,6 +23,8 @@ permissions:
 jobs:
   build-report:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
@@ -57,7 +70,7 @@ jobs:
         run: |
           python scripts/generate_daily_report.py --region full
 
-      - name: Commit and push repo
+      - name: Commit and push report
         run: |
           git add .nojekyll index.html canada cache
 
@@ -65,5 +78,30 @@ jobs:
             echo "No new Canada report"
           else
             git commit -m "Update Canada daily report"
+            git push || (git pull --rebase --autostash origin main && git push)
+          fi
+
+      - name: Wait for GitHub Pages
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.send_line == 'true' }}
+        run: sleep 45
+
+      - name: Send LINE notification
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.send_line == 'true' }}
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          LINE_FORCE_PUSH: ${{ github.event.inputs.force_line }}
+        run: |
+          python scripts/notify_line.py --audience me
+
+      - name: Commit LINE push log
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.send_line == 'true' }}
+        run: |
+          git add cache/line_push_log.json || true
+
+          if git diff --staged --quiet; then
+            echo "No LINE push log changes"
+          else
+            git commit -m "Update LINE push log"
             git push || (git pull --rebase --autostash origin main && git push)
           fi
