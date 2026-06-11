@@ -36,7 +36,7 @@ AUDIENCE_CFG = {
         "summary_path": "canada/latest.json",
         "target_env": "LINE_USER_ID",
         "mode": "push",
-        "card_title": "📈 北美財經晨報",
+        "card_title": "📈 每日財經晨報",
         "card_subtitle": "完整版（含投資組合）",
     },
     "tw_family": {
