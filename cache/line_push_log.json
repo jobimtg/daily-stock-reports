@@ -3,5 +3,10 @@
     "audience": "me",
     "date": "2026-06-10",
     "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/daily-financial-brief-2026-06-10.html"
+  },
+  "tw_group:2026-06-11": {
+    "audience": "tw_group",
+    "date": "2026-06-11",
+    "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/daily-tw-brief-2026-06-11.html"
   }
 }
