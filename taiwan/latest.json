@@ -5,9 +5,9 @@
   "weekday_zh": "週五",
   "taiex": {
     "ticker": "^TWII",
-    "price": 44278.6015625,
-    "change": 1129.140625,
-    "change_pct": 2.6168128186711486
+    "price": 44169.0390625,
+    "change": 1019.578125,
+    "change_pct": 2.3628988702241536
   },
   "tsx": null,
   "filename": "daily-tw-brief-2026-06-12.html",
