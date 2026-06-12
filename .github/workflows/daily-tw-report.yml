@@ -3,7 +3,12 @@ name: Daily Stock Report (Taiwan / LINE group)
 on:
   schedule:
     # Taiwan 08:00 = UTC 00:00
+    # NOTE: GitHub's built-in `schedule` trigger can be delayed by hours on
+    # low-activity repos. `repository_dispatch` below lets an external cron
+    # (e.g. cron-job.org) fire this workflow precisely on time.
     - cron: "0 0 * * *"
+  repository_dispatch:
+    types: [trigger-tw-report]
   workflow_dispatch:
     inputs:
       send_line:
@@ -87,11 +92,11 @@ jobs:
           fi
 
       - name: Wait for GitHub Pages
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.send_line == 'true' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
         run: sleep 45
 
       - name: Send LINE notification
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.send_line == 'true' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_GROUP_ID: ${{ secrets.LINE_GROUP_ID }}
@@ -100,7 +105,7 @@ jobs:
           python scripts/notify_line.py --audience tw_group
 
       - name: Commit LINE push log
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.send_line == 'true' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
         run: |
           git add cache/line_push_log.json || true
 
