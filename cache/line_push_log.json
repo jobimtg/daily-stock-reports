@@ -23,5 +23,10 @@
     "audience": "me",
     "date": "2026-06-12",
     "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/daily-financial-brief-2026-06-12.html"
+  },
+  "tw_group:2026-06-13": {
+    "audience": "tw_group",
+    "date": "2026-06-13",
+    "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/daily-tw-brief-2026-06-13.html"
   }
 }
