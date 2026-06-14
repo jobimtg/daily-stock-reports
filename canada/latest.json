@@ -1,8 +1,8 @@
 {
   "region": "full",
-  "date": "2026-06-13",
-  "date_str": "2026/06/13",
-  "weekday_zh": "週六",
+  "date": "2026-06-14",
+  "date_str": "2026/06/14",
+  "weekday_zh": "週日",
   "taiex": {
     "ticker": "^TWII",
     "price": 44169.0390625,
@@ -15,6 +15,6 @@
     "change": 266.3984375,
     "change_pct": 0.7683499055420158
   },
-  "filename": "daily-financial-brief-2026-06-13.html",
-  "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/daily-financial-brief-2026-06-13.html"
+  "filename": "daily-financial-brief-2026-06-14.html",
+  "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/daily-financial-brief-2026-06-14.html"
 }
