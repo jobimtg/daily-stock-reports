@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日財經晨報 — 2026/06/15</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-start: #1a1a2e; --bg-mid: #16213e; --bg-end: #0f3460;
+  --card-bg: rgba(255,255,255,0.06); --card-border: rgba(255,255,255,0.08);
+  --text: #fff; --text-dim: #a8b2d1; --text-muted: #6e7891;
+  --accent: #64ffda; --red: #ff6b6b; --green: #51cf66; --orange: #ffa94d;
+}
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+  min-height: 100vh; color: var(--text);
+  -webkit-font-smoothing: antialiased; line-height: 1.6;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+header { text-align: center; padding: 28px 0 24px; }
+.back-link { display: inline-block; color: var(--text-dim); text-decoration: none; font-size: 13px; margin-bottom: 16px; }
+.back-link:hover { color: var(--accent); }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
+.report-date { color: var(--text-dim); font-size: 14px; }
+.summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+.sum-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; backdrop-filter: blur(10px); }
+.sum-card .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.sum-card .value { font-size: 22px; font-weight: 700; }
+.sum-card .change { font-size: 13px; font-weight: 600; margin-top: 4px; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+.flat { color: var(--text-dim); }
+.arrow-cell { text-align: center; font-size: 16px; font-weight: 700; }
+section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px); }
+section h2 { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
+section h2 .num { background: var(--accent); color: #0f3460; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+section p { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
+section p strong { color: var(--text); }
+section ul { padding-left: 20px; color: var(--text-dim); font-size: 14px; }
+section ul li { margin-bottom: 4px; }
+section ul li strong { color: var(--text); }
+.subheading { color: var(--accent); font-size: 13px; font-weight: 600; margin: 14px 0 6px; padding: 4px 10px; background: rgba(100,255,218,0.06); border-radius: 6px; display: inline-block; }
+.table-wrap { overflow-x: auto; margin: 6px -4px; -webkit-overflow-scrolling: touch; }
+table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13px; }
+thead th { background: rgba(100,255,218,0.08); color: var(--accent); font-weight: 600; padding: 9px 10px; text-align: left; font-size: 12px; letter-spacing: 0.3px; border-bottom: 1px solid var(--card-border); }
+tbody td { padding: 9px 10px; border-bottom: 1px solid var(--card-border); color: var(--text-dim); }
+tbody td:first-child { color: var(--text); font-weight: 600; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+tbody tr:last-child td { border-bottom: none; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ticker { color: var(--accent) !important; font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 12px; }
+.risk-box { background: rgba(255,107,107,0.08); border-left: 3px solid var(--red); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
+.watch-box { background: rgba(255,169,77,0.08); border-left: 3px solid var(--orange); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
+.suggest-box { background: rgba(100,255,218,0.08); border-left: 3px solid var(--accent); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
+.risk-box h3, .watch-box h3, .suggest-box h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.risk-box h3 { color: var(--red); }
+.watch-box h3 { color: var(--orange); }
+.suggest-box h3 { color: var(--accent); }
+.risk-box ol, .watch-box ul { margin-left: 18px; color: var(--text-dim); font-size: 13px; }
+.suggest-box p { font-size: 13px; color: var(--text); margin: 0; }
+.sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.sources a { background: rgba(100,255,218,0.08); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; text-decoration: none; border: 1px solid rgba(100,255,218,0.2); }
+.sources a:hover { background: rgba(100,255,218,0.15); }
+.notice { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--card-border); }
+@media (max-width: 480px) {
+  h1 { font-size: 22px; }
+  .sum-card .value { font-size: 18px; }
+  section { padding: 16px; }
+  section h2 { font-size: 15px; }
+  table { font-size: 12px; }
+  thead th, tbody td { padding: 7px 8px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <a href="../index.html" class="back-link">← 回首頁</a>
+    <h1>📈 每日財經晨報</h1>
+    <div class="report-date">2026/06/15（週一）· Vancouver, BC</div>
+  </header>
+
+  <div class="summary">
+    
+    <div class="sum-card">
+      <div class="label">🇨🇦 TSX 綜合指數</div>
+      <div class="value">35,270.03</div>
+      <div class="change up">▲ 332.13 (+0.95%)</div>
+    </div>
+    
+    <div class="sum-card">
+      <div class="label">🇹🇼 TAIEX</div>
+      <div class="value">45,396.99</div>
+      <div class="change up">▲ 1,227.95 (+2.78%)</div>
+    </div>
+  </div>
+
+  
+  <section>
+    <h2><span class="num">1</span>加拿大股市 TSX</h2>
+    <p>加拿大股市週一上漲，主要受惠於貴金屬板塊的強勁表現及部分科技股的帶動，但能源與銀行股則呈現下跌。</p>
+    <p><strong>走勢重點：</strong></p>
+    <ul><li>貴金屬礦業股領漲，顯示市場對黃金的避險或通膨對沖需求。</li><li>科技股如Shopify和BlackBerry表現亮眼，為大盤貢獻漲幅。</li><li>原油價格大跌拖累能源板塊，多檔主要能源股收黑。</li><li>主要銀行股小幅下跌，對大盤構成部分壓力。</li></ul>
+  </section>
+  
+
+  <section>
+    <h2><span class="num">2</span>台灣股市 TAIEX</h2>
+    <p>台灣股市週一強勁上揚，半導體、金融及塑化類股全面走高，權值股表現突出，帶動指數大幅收漲。</p>
+    <p><strong>走勢重點：</strong></p>
+    <ul><li>半導體產業多檔個股漲幅顯著，成為推升大盤的主要力量。</li><li>金融類股普遍上漲，顯示市場對金融業前景的信心。</li><li>塑化類股表現強勁，反映原物料市場的資金流向。</li><li>台積電、聯發科等重要權值股穩健上漲，支撐指數表現。</li></ul>
+  </section>
+
+  
+  <section>
+    <h2><span class="num">3</span>ETF 每日精選</h2>
+    <p>依今日市場走勢輪動，挑選最具相關度與波動度的 ETF 作為參考。</p>
+
+    
+    <div class="subheading">🇹🇼 台灣 ETF（每日動態輪動 · 25 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價 (TWD)</th><th class="num">漲跌幅</th><th>類型</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">00830</td>
+            <td>國泰費城半導體</td>
+            <td class="num">98.45</td>
+            <td class="num up">+6.03%</td>
+            <td>美股半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00876</td>
+            <td>元大全球 5G</td>
+            <td class="num">98.85</td>
+            <td class="num up">+4.55%</td>
+            <td>全球科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00913</td>
+            <td>兆豐台灣晶圓製造</td>
+            <td class="num">51.55</td>
+            <td class="num up">+4.31%</td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00733</td>
+            <td>富邦臺灣中小</td>
+            <td class="num">73.90</td>
+            <td class="num up">+4.16%</td>
+            <td>中小型</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00891</td>
+            <td>中信關鍵半導體</td>
+            <td class="num">36.15</td>
+            <td class="num up">+3.52%</td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00893</td>
+            <td>國泰智能電動車</td>
+            <td class="num">46.93</td>
+            <td class="num up">+3.44%</td>
+            <td>電動車</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00935</td>
+            <td>野村臺灣新科技 50</td>
+            <td class="num">60.85</td>
+            <td class="num up">+3.40%</td>
+            <td>科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">006208</td>
+            <td>富邦台 50</td>
+            <td class="num">244.10</td>
+            <td class="num up">+3.39%</td>
+            <td>大盤</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00895</td>
+            <td>富邦未來車</td>
+            <td class="num">52.05</td>
+            <td class="num up">+3.38%</td>
+            <td>電動車</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00929</td>
+            <td>復華台灣科技優息</td>
+            <td class="num">30.49</td>
+            <td class="num up">+3.32%</td>
+            <td>科技+息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">0050</td>
+            <td>元大台灣 50</td>
+            <td class="num">105.25</td>
+            <td class="num up">+3.24%</td>
+            <td>大盤</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00881</td>
+            <td>國泰台灣 5G+</td>
+            <td class="num">54.55</td>
+            <td class="num up">+2.92%</td>
+            <td>5G</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00850</td>
+            <td>元大臺灣 ESG 永續</td>
+            <td class="num">90.35</td>
+            <td class="num up">+2.90%</td>
+            <td>ESG</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00692</td>
+            <td>富邦公司治理</td>
+            <td class="num">91.05</td>
+            <td class="num up">+2.77%</td>
+            <td>治理</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00912</td>
+            <td>中信臺灣智慧 50</td>
+            <td class="num">33.87</td>
+            <td class="num up">+2.64%</td>
+            <td>智能選股</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00701</td>
+            <td>國泰股利精選 30</td>
+            <td class="num">37.62</td>
+            <td class="num up">+2.48%</td>
+            <td>高股息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00892</td>
+            <td>富邦台灣半導體</td>
+            <td class="num">44.35</td>
+            <td class="num up">+2.33%</td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00770</td>
+            <td>國泰北美科技</td>
+            <td class="num">68.05</td>
+            <td class="num up">+2.18%</td>
+            <td>美股科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00900</td>
+            <td>富邦特選高股息 30</td>
+            <td class="num">19.51</td>
+            <td class="num up">+2.09%</td>
+            <td>高股息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00662</td>
+            <td>富邦 NASDAQ</td>
+            <td class="num">122.45</td>
+            <td class="num up">+2.00%</td>
+            <td>美股科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">0056</td>
+            <td>元大高股息</td>
+            <td class="num">51.50</td>
+            <td class="num up">+1.78%</td>
+            <td>高股息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00878</td>
+            <td>國泰永續高股息</td>
+            <td class="num">32.61</td>
+            <td class="num up">+1.75%</td>
+            <td>ESG 高息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00940</td>
+            <td>元大台灣價值高息</td>
+            <td class="num">12.43</td>
+            <td class="num up">+1.72%</td>
+            <td>價值+息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00919</td>
+            <td>群益台灣精選高息</td>
+            <td class="num">30.69</td>
+            <td class="num up">+1.66%</td>
+            <td>高股息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00646</td>
+            <td>元大 S&P 500</td>
+            <td class="num">74.50</td>
+            <td class="num up">+1.29%</td>
+            <td>美股</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="subheading">🇨🇦 加拿大 ETF（每日動態輪動 · 15 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價 (CAD)</th><th class="num">漲跌幅</th><th>類型</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">HXQ</td>
+            <td>Horizons NASDAQ-100 Index ETF</td>
+            <td class="num">122.37</td>
+            <td class="num up">+2.71%</td>
+            <td>納斯達克</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">ZQQ</td>
+            <td>BMO NASDAQ 100 Index Hedged</td>
+            <td class="num">205.85</td>
+            <td class="num up">+2.66%</td>
+            <td>納斯達克</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XIT</td>
+            <td>iShares S&P/TSX Capped IT</td>
+            <td class="num">74.59</td>
+            <td class="num up">+1.77%</td>
+            <td>加股科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XUU</td>
+            <td>iShares Core S&P U.S. Total</td>
+            <td class="num">77.50</td>
+            <td class="num up">+1.65%</td>
+            <td>美股全市場</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XSP</td>
+            <td>iShares S&P 500 (CAD Hedged)</td>
+            <td class="num">76.23</td>
+            <td class="num up">+1.64%</td>
+            <td>美股 500</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">HXS</td>
+            <td>Horizons S&P 500 Index ETF</td>
+            <td class="num">109.18</td>
+            <td class="num up">+1.62%</td>
+            <td>美股 500</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">VFV</td>
+            <td>Vanguard S&P 500 Index ETF</td>
+            <td class="num">187.50</td>
+            <td class="num up">+1.59%</td>
+            <td>美股 500</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">ZSP</td>
+            <td>BMO S&P 500 Index ETF</td>
+            <td class="num">115.70</td>
+            <td class="num up">+1.56%</td>
+            <td>美股 500</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">VEQT</td>
+            <td>Vanguard All Equity ETF Portfolio</td>
+            <td class="num">61.24</td>
+            <td class="num up">+1.37%</td>
+            <td>全球股票</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XEQT</td>
+            <td>iShares Core Equity ETF Portfolio</td>
+            <td class="num">45.26</td>
+            <td class="num up">+1.30%</td>
+            <td>全球股票</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">VCN</td>
+            <td>Vanguard FTSE Canada All Cap</td>
+            <td class="num">71.94</td>
+            <td class="num up">+1.12%</td>
+            <td>加股全市場</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XGRO</td>
+            <td>iShares Core Growth Portfolio</td>
+            <td class="num">38.66</td>
+            <td class="num up">+1.10%</td>
+            <td>成長型</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XIC</td>
+            <td>iShares S&P/TSX Capped Composite</td>
+            <td class="num">56.50</td>
+            <td class="num up">+0.98%</td>
+            <td>加股大盤</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XBAL</td>
+            <td>iShares Core Balanced Portfolio</td>
+            <td class="num">36.12</td>
+            <td class="num up">+0.81%</td>
+            <td>平衡型</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XIU</td>
+            <td>iShares S&P/TSX 60</td>
+            <td class="num">52.07</td>
+            <td class="num up">+0.62%</td>
+            <td>加股大型</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </section>
+  
+
+  
+  <section>
+    <h2><span class="num">4</span>兩市場重點股</h2>
+
+    
+    <div class="subheading">🇨🇦 TSX（依今日漲跌幅 · 15 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th>產業</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">WPM.TO</td>
+            <td>Wheaton Precious</td>
+            <td class="num">174.78</td>
+            <td class="num up">+7.68%</td>
+            <td>貴金屬</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">AEM.TO</td>
+            <td>Agnico Eagle Mines</td>
+            <td class="num">243.62</td>
+            <td class="num up">+7.13%</td>
+            <td>黃金</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">ABX.TO</td>
+            <td>Barrick Gold</td>
+            <td class="num">59.39</td>
+            <td class="num up">+5.58%</td>
+            <td>黃金</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">CCO.TO</td>
+            <td>Cameco</td>
+            <td class="num">148.86</td>
+            <td class="num up">+5.55%</td>
+            <td>鈾礦</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">SHOP.TO</td>
+            <td>Shopify</td>
+            <td class="num">158.30</td>
+            <td class="num up">+4.51%</td>
+            <td>科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">BB.TO</td>
+            <td>BlackBerry</td>
+            <td class="num">13.37</td>
+            <td class="num up">+3.97%</td>
+            <td>科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">BAM.TO</td>
+            <td>Brookfield Asset Mgmt</td>
+            <td class="num">67.97</td>
+            <td class="num up">+3.08%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">RY.TO</td>
+            <td>Royal Bank of Canada</td>
+            <td class="num">277.90</td>
+            <td class="num down">-0.37%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">TD.TO</td>
+            <td>Toronto-Dominion Bank</td>
+            <td class="num">163.32</td>
+            <td class="num down">-0.42%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">ENB.TO</td>
+            <td>Enbridge</td>
+            <td class="num">78.41</td>
+            <td class="num down">-0.72%</td>
+            <td>能源管線</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">WCN.TO</td>
+            <td>Waste Connections</td>
+            <td class="num">215.91</td>
+            <td class="num down">-1.11%</td>
+            <td>工業</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">CNR.TO</td>
+            <td>Canadian Nat Railway</td>
+            <td class="num">163.89</td>
+            <td class="num down">-1.55%</td>
+            <td>運輸</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">NTR.TO</td>
+            <td>Nutrien</td>
+            <td class="num">92.65</td>
+            <td class="num down">-2.07%</td>
+            <td>農業</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">CNQ.TO</td>
+            <td>Canadian Natural Res</td>
+            <td class="num">61.11</td>
+            <td class="num down">-3.61%</td>
+            <td>能源</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">SU.TO</td>
+            <td>Suncor Energy</td>
+            <td class="num">82.75</td>
+            <td class="num down">-3.79%</td>
+            <td>能源</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    <div class="subheading">🇹🇼 TAIEX（依今日漲跌幅 · 25 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th>產業</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">3008</td>
+            <td>大立光</td>
+            <td class="num">4,420.00</td>
+            <td class="num up">+9.95%</td>
+            <td>光學</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2344</td>
+            <td>華邦電</td>
+            <td class="num">189.00</td>
+            <td class="num up">+9.88%</td>
+            <td>記憶體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">1303</td>
+            <td>南亞</td>
+            <td class="num">117.00</td>
+            <td class="num up">+9.86%</td>
+            <td>塑化</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6770</td>
+            <td>力積電</td>
+            <td class="num">73.30</td>
+            <td class="num up">+9.08%</td>
+            <td>晶圓代工</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2454</td>
+            <td>聯發科</td>
+            <td class="num">4,470.00</td>
+            <td class="num up">+6.94%</td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2303</td>
+            <td>聯電</td>
+            <td class="num">141.50</td>
+            <td class="num up">+5.99%</td>
+            <td>晶圓代工</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">1326</td>
+            <td>台化</td>
+            <td class="num">51.60</td>
+            <td class="num up">+5.74%</td>
+            <td>塑化</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">8046</td>
+            <td>南電</td>
+            <td class="num">860.00</td>
+            <td class="num up">+5.01%</td>
+            <td>PCB</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2887</td>
+            <td>台新金</td>
+            <td class="num">31.60</td>
+            <td class="num up">+4.64%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2881</td>
+            <td>富邦金</td>
+            <td class="num">127.50</td>
+            <td class="num up">+4.51%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">1301</td>
+            <td>台塑</td>
+            <td class="num">47.25</td>
+            <td class="num up">+4.42%</td>
+            <td>塑化</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2345</td>
+            <td>智邦</td>
+            <td class="num">2,430.00</td>
+            <td class="num up">+4.07%</td>
+            <td>網通</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2891</td>
+            <td>中信金</td>
+            <td class="num">70.10</td>
+            <td class="num up">+3.70%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3231</td>
+            <td>緯創</td>
+            <td class="num">161.50</td>
+            <td class="num up">+3.53%</td>
+            <td>伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2882</td>
+            <td>國泰金</td>
+            <td class="num">104.00</td>
+            <td class="num up">+3.48%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2618</td>
+            <td>長榮航</td>
+            <td class="num">39.95</td>
+            <td class="num up">+3.23%</td>
+            <td>航空</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2890</td>
+            <td>永豐金</td>
+            <td class="num">35.20</td>
+            <td class="num up">+3.07%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2330</td>
+            <td>台積電</td>
+            <td class="num">2,375.00</td>
+            <td class="num up">+2.81%</td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2317</td>
+            <td>鴻海</td>
+            <td class="num">267.50</td>
+            <td class="num up">+2.69%</td>
+            <td>AI 伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2379</td>
+            <td>瑞昱</td>
+            <td class="num">634.00</td>
+            <td class="num up">+2.59%</td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2308</td>
+            <td>台達電</td>
+            <td class="num">2,210.00</td>
+            <td class="num down">-0.23%</td>
+            <td>電源/AI</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2382</td>
+            <td>廣達</td>
+            <td class="num">370.00</td>
+            <td class="num down">-0.54%</td>
+            <td>伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2609</td>
+            <td>陽明海運</td>
+            <td class="num">51.20</td>
+            <td class="num down">-2.29%</td>
+            <td>航運</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">5871</td>
+            <td>中租-KY</td>
+            <td class="num">118.50</td>
+            <td class="num down">-2.47%</td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">4938</td>
+            <td>和碩</td>
+            <td class="num">83.50</td>
+            <td class="num down">-6.28%</td>
+            <td>代工</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </section>
+  
+
+  
+  <section>
+    <h2><span class="num">5</span>總體市場 Macro</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>項目</th><th class="num">數值</th><th class="num">變動</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td>WTI 原油</td>
+            <td class="num">79.88</td>
+            <td class="num down">-5.89%</td>
+          </tr>
+          
+          <tr>
+            <td>Brent 原油</td>
+            <td class="num">82.57</td>
+            <td class="num down">-5.45%</td>
+          </tr>
+          
+          <tr>
+            <td>黃金</td>
+            <td class="num">4,382.20</td>
+            <td class="num up">+3.97%</td>
+          </tr>
+          
+          <tr>
+            <td>美元指數 DXY</td>
+            <td class="num">99.52</td>
+            <td class="num down">-0.23%</td>
+          </tr>
+          
+          <tr>
+            <td>加元/美元</td>
+            <td class="num">0.72</td>
+            <td class="num up">+0.01%</td>
+          </tr>
+          
+          <tr>
+            <td>台幣/美元</td>
+            <td class="num">0.03</td>
+            <td class="num up">+0.22%</td>
+          </tr>
+          
+          <tr>
+            <td>比特幣 BTC</td>
+            <td class="num">66,594.05</td>
+            <td class="num up">+1.34%</td>
+          </tr>
+          
+          <tr>
+            <td>VIX 恐慌指數</td>
+            <td class="num">16.30</td>
+            <td class="num down">-7.81%</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <p style="margin-top:12px;"><strong>美股盤中：</strong>
+      Dow 51,839.84（<span class="up">+1.25%</span>）&nbsp;S&P 500 7,550.63（<span class="up">+1.60%</span>）&nbsp;Nasdaq 26,524.57（<span class="up">+2.46%</span>）&nbsp;
+    </p>
+    
+  </section>
+  
+
+  
+  <section>
+    <h2><span class="num">6</span>今日結論</h2>
+
+    <div class="risk-box">
+      <h3>🚨 主要市場風險（5 項）</h3>
+      <ol><li>國際原油價格大幅波動，可能影響全球通膨與經濟穩定。</li><li>全球主要央行貨幣政策路徑的不確定性，可能引發市場震盪。</li><li>地緣政治緊張局勢持續，對全球供應鏈及市場情緒構成潛在威脅。</li><li>部分市場板塊漲幅過大，需留意獲利了結或修正風險。</li><li>全球經濟增長放緩的擔憂，可能影響企業盈利預期。</li></ol>
+    </div>
+
+    <div class="watch-box">
+      <h3>👀 今日觀察重點（5 項）</h3>
+      <ul><li>密切關注國際原油及黃金價格的後續走勢。</li><li>留意主要經濟體通膨數據及央行官員對利率政策的最新表態。</li><li>觀察半導體產業的庫存調整與終端需求變化。</li><li>關注資金在不同產業板塊間的輪動情況。</li><li>注意全球貿易關係及政策變化對出口導向型經濟體的影響。</li></ul>
+    </div>
+
+    <div class="suggest-box">
+      <h3>💡 簡短建議</h3>
+      <p>建議投資人保持審慎樂觀，密切關注市場動態與總體經濟數據。在當前多空交織的環境下，應著重於具備基本面支撐的個股，並透過多元化配置來分散風險，以應對潛在的市場波動。</p>
+    </div>
+  </section>
+  
+
+  
+  <section>
+    <h2><span class="num">7</span>投資組合</h2>
+    <p>當前追蹤的持倉與市價（不含金額與績效）。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">現價 (CAD)</th><th class="num">趨勢</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">NVDA</td>
+            <td>Nvidia CDR (Hedged)</td>
+            <td class="num">209.90</td>
+            <td class="arrow-cell up">↑</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">SMCI</td>
+            <td>Supermicro CDR (Hedged)</td>
+            <td class="num">31.27</td>
+            <td class="arrow-cell up">↑</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">BCE</td>
+            <td>BCE Inc</td>
+            <td class="num">33.80</td>
+            <td class="arrow-cell down">↓</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">PDIV</td>
+            <td>Purpose Enhanced Dividend</td>
+            <td class="num">9.73</td>
+            <td class="arrow-cell up">↑</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">AQN</td>
+            <td>Algonquin Power & Util</td>
+            <td class="num">8.32</td>
+            <td class="arrow-cell flat">→</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">PSA</td>
+            <td>Purpose HISA ETF</td>
+            <td class="num">50.06</td>
+            <td class="arrow-cell flat">→</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">XEQT</td>
+            <td>iShares Core Equity ETF</td>
+            <td class="num">45.26</td>
+            <td class="arrow-cell up">↑</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">BTCC</td>
+            <td>Purpose Bitcoin ETF (Hdg)</td>
+            <td class="num">11.73</td>
+            <td class="arrow-cell up">↑</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">T</td>
+            <td>Telus Corp</td>
+            <td class="num">16.61</td>
+            <td class="arrow-cell down">↓</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">LB</td>
+            <td>Laurentian Bank</td>
+            <td class="num">40.34</td>
+            <td class="arrow-cell flat">→</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">SOBO</td>
+            <td>South Bow Corp</td>
+            <td class="num">52.93</td>
+            <td class="arrow-cell down">↓</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <p style="margin-top:14px;"><strong>今日相關觀察：</strong></p>
+    <ul><li>科技成長型部位展現良好動能，反映市場對創新產業的青睞。</li><li>加密貨幣相關投資表現突出，顯示其在市場中的獨特地位。</li><li>防禦性公用事業及電信類股表現相對持平，提供組合穩定性。</li><li>股息收益型策略維持正向表現，有助於提供穩健回報。</li><li>整體投資組合在不同市場環境下，展現出一定的抗壓性與成長潛力。</li></ul>
+    
+
+    
+    <div class="watch-box">
+      <h3>⚖️ 部位健檢</h3>
+      <ul><li>成長型部位表現強勁，需持續評估其基本面與估值。</li><li>防禦型部位提供穩定支撐，有助於平衡整體風險。</li><li>加密貨幣部位波動性較高，但近期表現積極，需留意風險管理。</li><li>整體部位配置多元，有助於應對不同市場情境。</li></ul>
+    </div>
+    
+  </section>
+  
+
+  <section>
+    <h2><span class="num">8</span>資料來源</h2>
+    <div class="sources">
+      <a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a>
+      <a href="https://www.twse.com.tw" target="_blank">證交所 TWSE</a>
+      
+      <a href="https://www.bnnbloomberg.ca" target="_blank">BNN Bloomberg</a>
+      <a href="https://money.tmx.com" target="_blank">TMX Money</a>
+      
+      <a href="https://www.investing.com" target="_blank">Investing.com</a>
+    </div>
+    <p class="notice">⚠ 數據來自 yfinance 自動抓取，分析文字由 Gemini AI 生成。本報告僅供個人參考，非投資建議。</p>
+  </section>
+
+  <footer>
+    Auto-generated · 2026/06/15 · GitHub Actions + Gemini · Full edition
+  </footer>
+
+</div>
+</body>
+</html>
