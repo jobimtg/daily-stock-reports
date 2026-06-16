@@ -770,7 +770,7 @@ def main():
         institutional=institutional,
         margin_data=margin_data,
         n=narrative,
-        index_link="../index.html",
+        index_link=(("../" * len(Path(region_cfg.get("output_subdir", "")).parts)) + "index.html") if region_cfg.get("output_subdir") else "index.html",
     )
 
     # ---- Save ----
