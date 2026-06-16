@@ -3,3 +3,15 @@ __pycache__/
 *.pyc
 .env
 *.log
+
+.vscode/
+.idea/
+
+*.tmp
+*.bak
+
+.DS_Store
+
+canada/morning/*.html
+taiwan/morning/*.html
+taiwan/closing/*.html
