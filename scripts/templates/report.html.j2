@@ -3,76 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% if region == 'tw' %}每日台股晨報{% else %}每日財經晨報{% endif %} — {{ date_str }}</title>
+<title>{% if region == 'tw' %}每日台股報告{% else %}每日財經晨報{% endif %} — {{ date_str }}</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg-start: #1a1a2e; --bg-mid: #16213e; --bg-end: #0f3460;
-  --card-bg: rgba(255,255,255,0.06); --card-border: rgba(255,255,255,0.08);
-  --text: #fff; --text-dim: #a8b2d1; --text-muted: #6e7891;
-  --accent: #64ffda; --red: #ff6b6b; --green: #51cf66; --orange: #ffa94d;
+  --bg-start:#1a1a2e; --bg-mid:#16213e; --bg-end:#0f3460;
+  --card-bg:rgba(255,255,255,0.06); --card-border:rgba(255,255,255,0.08);
+  --text:#fff; --text-dim:#a8b2d1; --text-muted:#6e7891;
+  --accent:#64ffda; --red:#ff6b6b; --green:#51cf66; --orange:#ffa94d;
+  --note-bg:rgba(100,255,218,0.06);
 }
-html, body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
-  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
-  min-height: 100vh; color: var(--text);
-  -webkit-font-smoothing: antialiased; line-height: 1.6;
+html,body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;
+  background:linear-gradient(135deg,var(--bg-start) 0%,var(--bg-mid) 50%,var(--bg-end) 100%);
+  min-height:100vh; color:var(--text); -webkit-font-smoothing:antialiased; line-height:1.6;
 }
-.container { max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
-header { text-align: center; padding: 28px 0 24px; }
-.back-link { display: inline-block; color: var(--text-dim); text-decoration: none; font-size: 13px; margin-bottom: 16px; }
-.back-link:hover { color: var(--accent); }
-h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
-.report-date { color: var(--text-dim); font-size: 14px; }
-.summary { display: grid; grid-template-columns: repeat({% if region == 'tw' %}1{% else %}2{% endif %}, 1fr); gap: 12px; margin: 20px 0; }
-.sum-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; backdrop-filter: blur(10px); }
-.sum-card .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-.sum-card .value { font-size: 22px; font-weight: 700; }
-.sum-card .change { font-size: 13px; font-weight: 600; margin-top: 4px; }
-.up { color: var(--green); }
-.down { color: var(--red); }
-.flat { color: var(--text-dim); }
-.arrow-cell { text-align: center; font-size: 16px; font-weight: 700; }
-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px); }
-section h2 { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
-section h2 .num { background: var(--accent); color: #0f3460; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-section p { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
-section p strong { color: var(--text); }
-section ul { padding-left: 20px; color: var(--text-dim); font-size: 14px; }
-section ul li { margin-bottom: 4px; }
-section ul li strong { color: var(--text); }
-.subheading { color: var(--accent); font-size: 13px; font-weight: 600; margin: 14px 0 6px; padding: 4px 10px; background: rgba(100,255,218,0.06); border-radius: 6px; display: inline-block; }
-.table-wrap { overflow-x: auto; margin: 6px -4px; -webkit-overflow-scrolling: touch; }
-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13px; }
-thead th { background: rgba(100,255,218,0.08); color: var(--accent); font-weight: 600; padding: 9px 10px; text-align: left; font-size: 12px; letter-spacing: 0.3px; border-bottom: 1px solid var(--card-border); }
-tbody td { padding: 9px 10px; border-bottom: 1px solid var(--card-border); color: var(--text-dim); }
-tbody td:first-child { color: var(--text); font-weight: 600; }
-tbody tr:hover { background: rgba(255,255,255,0.03); }
-tbody tr:last-child td { border-bottom: none; }
-td.num { text-align: right; font-variant-numeric: tabular-nums; }
-.ticker { color: var(--accent) !important; font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 12px; }
-.risk-box { background: rgba(255,107,107,0.08); border-left: 3px solid var(--red); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
-.watch-box { background: rgba(255,169,77,0.08); border-left: 3px solid var(--orange); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
-.suggest-box { background: rgba(100,255,218,0.08); border-left: 3px solid var(--accent); padding: 12px 14px; border-radius: 6px; margin-top: 10px; }
-.risk-box h3, .watch-box h3, .suggest-box h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
-.risk-box h3 { color: var(--red); }
-.watch-box h3 { color: var(--orange); }
-.suggest-box h3 { color: var(--accent); }
-.risk-box ol, .watch-box ul { margin-left: 18px; color: var(--text-dim); font-size: 13px; }
-.suggest-box p { font-size: 13px; color: var(--text); margin: 0; }
-.sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.sources a { background: rgba(100,255,218,0.08); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; text-decoration: none; border: 1px solid rgba(100,255,218,0.2); }
-.sources a:hover { background: rgba(100,255,218,0.15); }
-.notice { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
-footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--card-border); }
-@media (max-width: 480px) {
-  h1 { font-size: 22px; }
-  .sum-card .value { font-size: 18px; }
-  section { padding: 16px; }
-  section h2 { font-size: 15px; }
-  table { font-size: 12px; }
-  thead th, tbody td { padding: 7px 8px; }
+.container{max-width:920px;margin:0 auto;padding:24px 16px 60px;}
+header{text-align:center;padding:28px 0 20px;}
+.back-link{display:inline-block;color:var(--text-dim);text-decoration:none;font-size:13px;margin-bottom:16px;}
+.back-link:hover{color:var(--accent);}
+h1{font-size:26px;font-weight:700;letter-spacing:-0.3px;margin-bottom:4px;}
+.report-date{color:var(--text-dim);font-size:14px;margin-bottom:6px;}
+
+/* Data reference notice banner */
+.data-ref-banner{
+  background:rgba(255,169,77,0.10);border:1px solid rgba(255,169,77,0.25);
+  border-radius:10px;padding:10px 16px;margin:0 0 16px;
+  font-size:12px;color:var(--orange);text-align:center;
+}
+.data-ref-banner strong{color:var(--orange);}
+
+.summary{display:grid;grid-template-columns:repeat({% if region == 'tw' %}1{% else %}2{% endif %},1fr);gap:12px;margin:18px 0;}
+.sum-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:16px;backdrop-filter:blur(10px);}
+.sum-card .label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.sum-card .value{font-size:22px;font-weight:700;}
+.sum-card .change{font-size:13px;font-weight:600;margin-top:4px;}
+.up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--text-dim);}
+.arrow-cell{text-align:center;font-size:16px;font-weight:700;}
+section{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-bottom:16px;backdrop-filter:blur(10px);}
+section h2{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--card-border);}
+section h2 .num{background:var(--accent);color:#0f3460;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+section p{color:var(--text-dim);font-size:14px;margin-bottom:8px;}
+section p strong{color:var(--text);}
+section ul{padding-left:20px;color:var(--text-dim);font-size:14px;}
+section ul li{margin-bottom:5px;}
+section ul li strong{color:var(--text);}
+.subheading{color:var(--accent);font-size:13px;font-weight:600;margin:14px 0 6px;padding:4px 10px;background:rgba(100,255,218,0.06);border-radius:6px;display:inline-block;}
+.table-wrap{overflow-x:auto;margin:6px -4px;-webkit-overflow-scrolling:touch;}
+table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px;}
+thead th{background:rgba(100,255,218,0.08);color:var(--accent);font-weight:600;padding:9px 10px;text-align:left;font-size:12px;letter-spacing:0.3px;border-bottom:1px solid var(--card-border);}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--card-border);color:var(--text-dim);}
+tbody td:first-child{color:var(--text);font-weight:600;}
+tbody tr:hover{background:rgba(255,255,255,0.03);}
+tbody tr:last-child td{border-bottom:none;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;}
+.ticker{color:var(--accent)!important;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;}
+.vol-cell{color:var(--text-muted);font-size:12px;}
+.pos-bar-wrap{display:flex;align-items:center;gap:6px;min-width:80px;}
+.pos-bar{height:5px;background:rgba(255,255,255,0.1);border-radius:3px;flex:1;overflow:hidden;}
+.pos-bar-fill{height:100%;background:var(--accent);border-radius:3px;}
+.pos-pct{font-size:10px;color:var(--text-muted);white-space:nowrap;}
+
+/* Institutional & margin cards */
+.inst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;}
+.inst-card{background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;text-align:center;}
+.inst-card .inst-label{font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+.inst-card .inst-val{font-size:16px;font-weight:700;}
+.margin-row{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0;font-size:13px;color:var(--text-dim);}
+.margin-row span strong{color:var(--text);}
+
+.risk-box{background:rgba(255,107,107,0.08);border-left:3px solid var(--red);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.watch-box{background:rgba(255,169,77,0.08);border-left:3px solid var(--orange);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.suggest-box{background:rgba(100,255,218,0.08);border-left:3px solid var(--accent);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.risk-box h3,.watch-box h3,.suggest-box h3{font-size:13px;font-weight:700;margin-bottom:6px;}
+.risk-box h3{color:var(--red);} .watch-box h3{color:var(--orange);} .suggest-box h3{color:var(--accent);}
+.risk-box ol,.watch-box ul{margin-left:18px;color:var(--text-dim);font-size:13px;}
+.risk-box ol li,.watch-box ul li{margin-bottom:5px;}
+.suggest-box p{font-size:13px;color:var(--text);margin:0;}
+.sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.sources a{background:rgba(100,255,218,0.08);color:var(--accent);padding:6px 12px;border-radius:20px;font-size:12px;text-decoration:none;border:1px solid rgba(100,255,218,0.2);}
+.sources a:hover{background:rgba(100,255,218,0.15);}
+.notice{font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;}
+footer{text-align:center;margin-top:24px;padding:16px 0;color:var(--text-muted);font-size:11px;border-top:1px solid var(--card-border);}
+@media(max-width:600px){
+  .inst-grid{grid-template-columns:1fr 1fr;}
+  h1{font-size:22px;} .sum-card .value{font-size:18px;} section{padding:16px;} section h2{font-size:15px;} table{font-size:12px;} thead th,tbody td{padding:7px 8px;}
 }
 </style>
 </head>
@@ -81,10 +97,16 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
 
   <header>
     <a href="{{ index_link }}" class="back-link">← 回首頁</a>
-    <h1>{% if region == 'tw' %}📈 每日台股晨報{% else %}📈 每日財經晨報{% endif %}</h1>
+    <h1>{% if region == 'tw' %}📈 每日台股報告{% else %}📈 每日財經晨報{% endif %}</h1>
     <div class="report-date">{{ date_str }}（{{ weekday_zh }}）· {{ city }}</div>
   </header>
 
+  {# ── Data reference notice ── #}
+  <div class="data-ref-banner">
+    📋 本報告資料截至 <strong>{{ data_ref_str }}（{{ data_ref_weekday }}）收盤</strong>，供 {{ date_str }} 開盤前參考。即時數據請以交易所為準。
+  </div>
+
+  {# ── Summary cards ── #}
   <div class="summary">
     {% if 'tsx' in show %}
     <div class="sum-card">
@@ -94,12 +116,13 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
     </div>
     {% endif %}
     <div class="sum-card">
-      <div class="label">🇹🇼 TAIEX</div>
+      <div class="label">🇹🇼 TAIEX 加權指數</div>
       <div class="value">{% if taiex %}{{ taiex.price | price }}{% else %}—{% endif %}</div>
       {% if taiex %}<div class="change {{ 'up' if taiex.change_pct >= 0 else 'down' }}">{{ '▲' if taiex.change_pct >= 0 else '▼' }} {{ taiex.change | price }} ({{ taiex.change_pct | pct }})</div>{% endif %}
     </div>
   </div>
 
+  {# ── TSX section ── #}
   {% if 'tsx' in show %}
   <section>
     <h2><span class="num">{{ num.tsx }}</span>加拿大股市 TSX</h2>
@@ -109,23 +132,69 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
   </section>
   {% endif %}
 
+  {# ── TAIEX section ── #}
   <section>
     <h2><span class="num">{{ num.taiex }}</span>台灣股市 TAIEX</h2>
     <p>{{ n.taiex_summary }}</p>
     <p><strong>走勢重點：</strong></p>
     <ul>{% for h in n.taiex_highlights %}<li>{{ h }}</li>{% endfor %}</ul>
+
+    {# Three major institutional flows #}
+    {% if institutional and institutional.available %}
+    <p style="margin-top:14px;"><strong>🏦 三大法人動向</strong></p>
+    <div class="inst-grid">
+      <div class="inst-card">
+        <div class="inst-label">外資</div>
+        <div class="inst-val {{ 'up' if (institutional.foreign or 0) >= 0 else 'down' }}">
+          {{ '+' if (institutional.foreign or 0) >= 0 else '' }}{{ institutional.foreign | price(1) }} 億
+        </div>
+      </div>
+      <div class="inst-card">
+        <div class="inst-label">投信</div>
+        <div class="inst-val {{ 'up' if (institutional.investment_trust or 0) >= 0 else 'down' }}">
+          {{ '+' if (institutional.investment_trust or 0) >= 0 else '' }}{{ institutional.investment_trust | price(1) }} 億
+        </div>
+      </div>
+      <div class="inst-card">
+        <div class="inst-label">自營商</div>
+        <div class="inst-val {{ 'up' if (institutional.dealer or 0) >= 0 else 'down' }}">
+          {{ '+' if (institutional.dealer or 0) >= 0 else '' }}{{ institutional.dealer | price(1) }} 億
+        </div>
+      </div>
+    </div>
+    {% if n.institutional_insight %}
+    <p style="margin-top:6px;font-size:13px;color:var(--text-dim);">{{ n.institutional_insight }}</p>
+    {% endif %}
+    {% endif %}
+
+    {# Margin balance #}
+    {% if margin_data and margin_data.available %}
+    <p style="margin-top:12px;"><strong>📊 融資融券餘額</strong></p>
+    <div class="margin-row">
+      <span>融資餘額: <strong>{{ "{:,}".format(margin_data.margin_balance) }} 千股</strong>
+        <span class="{{ 'up' if (margin_data.margin_change or 0) >= 0 else 'down' }}">({{ margin_data.margin_change | pct }})</span>
+      </span>
+      <span>融券餘額: <strong>{{ "{:,}".format(margin_data.short_balance) }} 千股</strong>
+        <span class="{{ 'up' if (margin_data.short_change or 0) >= 0 else 'down' }}">({{ margin_data.short_change | pct }})</span>
+      </span>
+    </div>
+    {% if n.margin_insight %}
+    <p style="font-size:13px;color:var(--text-dim);">{{ n.margin_insight }}</p>
+    {% endif %}
+    {% endif %}
   </section>
 
+  {# ── ETF section ── #}
   {% if 'etf_tw' in show or 'etf_ca' in show %}
   <section>
     <h2><span class="num">{{ num.etf }}</span>ETF 每日精選</h2>
-    <p>依今日市場走勢輪動，挑選最具相關度與波動度的 ETF 作為參考。</p>
+    <p>依今日市場走勢輪動挑選，每日非核心標的自動更換避免重複。</p>
 
     {% if 'etf_tw' in show %}
     <div class="subheading">🇹🇼 台灣 ETF（每日動態輪動 · {{ tw_etfs|length }} 檔）</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價 (TWD)</th><th class="num">漲跌幅</th><th>類型</th></tr></thead>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價(TWD)</th><th class="num">漲跌幅</th><th class="num">成交量</th><th>類型</th></tr></thead>
         <tbody>
           {% for e in tw_etfs %}
           <tr>
@@ -133,6 +202,7 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
             <td>{{ e.name }}</td>
             <td class="num">{{ e.price | price }}</td>
             <td class="num {{ 'up' if e.change_pct >= 0 else 'down' }}">{{ e.change_pct | pct }}</td>
+            <td class="num vol-cell">{{ e.volume | vol }}</td>
             <td>{{ e.category }}</td>
           </tr>
           {% endfor %}
@@ -145,7 +215,7 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
     <div class="subheading">🇨🇦 加拿大 ETF（每日動態輪動 · {{ ca_etfs|length }} 檔）</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價 (CAD)</th><th class="num">漲跌幅</th><th>類型</th></tr></thead>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價(CAD)</th><th class="num">漲跌幅</th><th class="num">成交量</th><th>類型</th></tr></thead>
         <tbody>
           {% for e in ca_etfs %}
           <tr>
@@ -153,6 +223,7 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
             <td>{{ e.name }}</td>
             <td class="num">{{ e.price | price }}</td>
             <td class="num {{ 'up' if e.change_pct >= 0 else 'down' }}">{{ e.change_pct | pct }}</td>
+            <td class="num vol-cell">{{ e.volume | vol }}</td>
             <td>{{ e.category }}</td>
           </tr>
           {% endfor %}
@@ -163,15 +234,16 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
   </section>
   {% endif %}
 
+  {# ── Top stocks section ── #}
   {% if 'top_taiex' in show or 'top_tsx' in show %}
   <section>
     <h2><span class="num">{{ num.top }}</span>{% if 'top_tsx' in show %}兩市場{% else %}台股{% endif %}重點股</h2>
 
     {% if 'top_tsx' in show %}
-    <div class="subheading">🇨🇦 TSX（依今日漲跌幅 · {{ tsx_top|length }} 檔）</div>
+    <div class="subheading">🇨🇦 TSX（依漲跌幅 · {{ tsx_top|length }} 檔）</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th>產業</th></tr></thead>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th class="num">成交量</th><th>52週位置</th><th>產業</th></tr></thead>
         <tbody>
           {% for s in tsx_top %}
           <tr>
@@ -179,6 +251,15 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
             <td>{{ s.name }}</td>
             <td class="num">{{ s.price | price }}</td>
             <td class="num {{ 'up' if s.change_pct >= 0 else 'down' }}">{{ s.change_pct | pct }}</td>
+            <td class="num vol-cell">{{ s.volume | vol }}</td>
+            <td>
+              {% if s.week52_pos is defined and s.week52_pos is not none %}
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:{{ s.week52_pos }}%"></div></div>
+                <span class="pos-pct">{{ s.week52_pos }}%</span>
+              </div>
+              {% else %}—{% endif %}
+            </td>
             <td>{{ s.sector }}</td>
           </tr>
           {% endfor %}
@@ -187,10 +268,10 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
     </div>
     {% endif %}
 
-    <div class="subheading">🇹🇼 TAIEX（依今日漲跌幅 · {{ taiex_top|length }} 檔）</div>
+    <div class="subheading">🇹🇼 TAIEX（依漲跌幅 · {{ taiex_top|length }} 檔）</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th>產業</th></tr></thead>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價(TWD)</th><th class="num">漲跌幅</th><th class="num">成交量</th><th>52週位置</th><th>產業</th></tr></thead>
         <tbody>
           {% for s in taiex_top %}
           <tr>
@@ -198,6 +279,15 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
             <td>{{ s.name }}</td>
             <td class="num">{{ s.price | price }}</td>
             <td class="num {{ 'up' if s.change_pct >= 0 else 'down' }}">{{ s.change_pct | pct }}</td>
+            <td class="num vol-cell">{{ s.volume | vol }}</td>
+            <td>
+              {% if s.week52_pos is defined and s.week52_pos is not none %}
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:{{ s.week52_pos }}%"></div></div>
+                <span class="pos-pct">{{ s.week52_pos }}%</span>
+              </div>
+              {% else %}—{% endif %}
+            </td>
             <td>{{ s.sector }}</td>
           </tr>
           {% endfor %}
@@ -207,6 +297,7 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
   </section>
   {% endif %}
 
+  {# ── Macro section ── #}
   {% if 'macro' in show %}
   <section>
     <h2><span class="num">{{ num.macro }}</span>總體市場 Macro</h2>
@@ -216,7 +307,7 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
         <tbody>
           {% for m in macro %}
           <tr>
-            <td>{{ m.name }}</td>
+            <td>{{ m.name }}{% if m.note is defined %} <span style="font-size:10px;color:var(--text-muted);">({{ m.note }})</span>{% endif %}</td>
             <td class="num">{{ m.price | price }}</td>
             <td class="num {{ 'up' if m.change_pct >= 0 else 'down' }}">{{ m.change_pct | pct }}</td>
           </tr>
@@ -225,27 +316,25 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
       </table>
     </div>
     {% if us_idx %}
-    <p style="margin-top:12px;"><strong>美股盤中：</strong>
+    <p style="margin-top:12px;"><strong>🇺🇸 美股盤後：</strong>
       {% for u in us_idx %}{{ u.name }} {{ u.price | price }}（<span class="{{ 'up' if u.change_pct >= 0 else 'down' }}">{{ u.change_pct | pct }}</span>）&nbsp;{% endfor %}
     </p>
     {% endif %}
   </section>
   {% endif %}
 
+  {# ── Conclusion section ── #}
   {% if 'conclusion' in show %}
   <section>
     <h2><span class="num">{{ num.conclusion }}</span>今日結論</h2>
-
     <div class="risk-box">
       <h3>🚨 主要市場風險（5 項）</h3>
       <ol>{% for r in n.risks %}<li>{{ r }}</li>{% endfor %}</ol>
     </div>
-
     <div class="watch-box">
       <h3>👀 今日觀察重點（5 項）</h3>
       <ul>{% for w in n.watch_points %}<li>{{ w }}</li>{% endfor %}</ul>
     </div>
-
     <div class="suggest-box">
       <h3>💡 簡短建議</h3>
       <p>{{ n.suggestion }}</p>
@@ -253,11 +342,11 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
   </section>
   {% endif %}
 
+  {# ── Portfolio section ── #}
   {% if 'portfolio' in show %}
   <section>
     <h2><span class="num">{{ num.portfolio }}</span>投資組合</h2>
     <p>當前追蹤的持倉與市價（不含金額與績效）。</p>
-
     <div class="table-wrap">
       <table>
         <thead><tr><th>代號</th><th>名稱</th><th class="num">現價 (CAD)</th><th class="num">趨勢</th></tr></thead>
@@ -273,12 +362,10 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
         </tbody>
       </table>
     </div>
-
     {% if n.portfolio_observations %}
     <p style="margin-top:14px;"><strong>今日相關觀察：</strong></p>
     <ul>{% for o in n.portfolio_observations %}<li>{{ o }}</li>{% endfor %}</ul>
     {% endif %}
-
     {% if n.position_health %}
     <div class="watch-box">
       <h3>⚖️ 部位健檢</h3>
@@ -288,22 +375,24 @@ footer { text-align: center; margin-top: 24px; padding: 16px 0; color: var(--tex
   </section>
   {% endif %}
 
+  {# ── Sources ── #}
   <section>
     <h2><span class="num">{{ num.sources }}</span>資料來源</h2>
     <div class="sources">
       <a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a>
       <a href="https://www.twse.com.tw" target="_blank">證交所 TWSE</a>
+      <a href="https://openapi.twse.com.tw" target="_blank">TWSE Open API</a>
       {% if region == 'full' %}
       <a href="https://www.bnnbloomberg.ca" target="_blank">BNN Bloomberg</a>
       <a href="https://money.tmx.com" target="_blank">TMX Money</a>
       {% endif %}
       <a href="https://www.investing.com" target="_blank">Investing.com</a>
     </div>
-    <p class="notice">⚠ 數據來自 yfinance 自動抓取，分析文字由 Gemini AI 生成。本報告僅供個人參考，非投資建議。</p>
+    <p class="notice">⚠ 數據來自 yfinance 自動抓取與 TWSE Open API，分析文字由 Gemini AI 生成。本報告僅供個人參考，非投資建議。資料截至 {{ data_ref_str }} 收盤。</p>
   </section>
 
   <footer>
-    Auto-generated · {{ date_str }} · GitHub Actions + Gemini · {% if region == 'tw' %}Taiwan family edition{% else %}Full edition{% endif %}
+    Auto-generated · {{ date_str }} · GitHub Actions + Gemini AI · {% if region == 'tw' %}Taiwan edition{% else %}Full edition{% endif %}
   </footer>
 
 </div>
