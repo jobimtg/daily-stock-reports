@@ -1,0 +1,17 @@
+{
+  "region": "full",
+  "date": "2026-06-15",
+  "date_str": "2026/06/15",
+  "weekday_zh": "週一",
+  "data_ref": "2026/06/12",
+  "taiex": {
+    "ticker": "^TWII",
+    "price": 45695.37890625,
+    "change": 1526.33984375,
+    "change_pct": 3.455678176720578,
+    "volume": 0
+  },
+  "tsx": null,
+  "filename": "daily-financial-brief-2026-06-15.html",
+  "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/morning/daily-financial-brief-2026-06-15.html"
+}
