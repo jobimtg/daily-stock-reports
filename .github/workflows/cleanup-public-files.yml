@@ -1,0 +1,88 @@
+name: Cleanup Public Files
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remove public cache, old report paths, and portfolio exposure
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          import re
+
+          root = Path.cwd()
+
+          remove_dirs = [root / "cache"]
+          remove_globs = [
+              "canada/daily-financial-brief-*.html",
+              "canada/latest.json",
+              "taiwan/daily-tw-brief-*.html",
+              "taiwan/latest.json",
+          ]
+          gitignore_lines = ["cache/", "__pycache__/", "*.pyc", ".env", "*.log"]
+
+          for path in remove_dirs:
+              if path.exists():
+                  shutil.rmtree(path)
+                  print(f"Removed directory: {path.relative_to(root)}")
+
+          for pattern in remove_globs:
+              for path in root.glob(pattern):
+                  if path.is_file():
+                      path.unlink()
+                      print(f"Removed file: {path.relative_to(root)}")
+
+          gi = root / ".gitignore"
+          lines = gi.read_text(encoding="utf-8").splitlines() if gi.exists() else []
+          existing = set(line.strip() for line in lines)
+          for line in gitignore_lines:
+              if line not in existing:
+                  lines.append(line)
+          gi.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+          print("Updated .gitignore")
+
+          cfg = root / "scripts" / "config.py"
+          if cfg.exists():
+              text = cfg.read_text(encoding="utf-8")
+              original = text
+              text = text.replace('"conclusion", "portfolio", "sources"', '"conclusion", "sources"')
+              text = text.replace("'conclusion', 'portfolio', 'sources'", "'conclusion', 'sources'")
+              text = re.sub(r',\s*"portfolio"', '', text)
+              text = re.sub(r'"portfolio"\s*,\s*', '', text)
+              text = re.sub(r",\s*'portfolio'", '', text)
+              text = re.sub(r"'portfolio'\s*,\s*", '', text)
+              text = re.sub(
+                  r"PORTFOLIO\s*=\s*\[.*?\]\n\n# ============================================================",
+                  "PORTFOLIO = []\n\n# ============================================================",
+                  text,
+                  flags=re.S,
+              )
+              if text != original:
+                  cfg.write_text(text, encoding="utf-8")
+                  print("Updated scripts/config.py")
+          PY
+
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No cleanup changes to commit"
+          else
+            git commit -m "Clean public files and disable portfolio exposure"
+            git push
+          fi
