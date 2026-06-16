@@ -607,7 +607,7 @@ def main():
     # - Morning report (tw_morning, full): data is the previous trading day
     report_type = region_cfg.get("report_type", "morning")
     if report_type == "closing":
-        data_ref = date_obj  # today's closing data
+        data_ref = date_obj
     else:
         data_ref = date_obj - dt.timedelta(days=1)
         while data_ref.weekday() >= 5:
