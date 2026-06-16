@@ -1,23 +1,20 @@
-name: Daily Stock Report (Taiwan / LINE group)
+name: Daily TW Morning Report (台灣晨報)
 
 on:
   schedule:
-    # Taiwan 08:00 = UTC 00:00
-    # NOTE: GitHub's built-in `schedule` trigger can be delayed by hours on
-    # low-activity repos. `repository_dispatch` below lets an external cron
-    # (e.g. cron-job.org) fire this workflow precisely on time.
-    - cron: "0 0 * * *"
+    # 台北 08:55 = UTC 00:55（備援，GitHub 可能延遲）
+    - cron: "55 0 * * 1-5"
   repository_dispatch:
-    types: [trigger-tw-report]
+    types: [trigger-tw-morning]
   workflow_dispatch:
     inputs:
       send_line:
-        description: "Send LINE notification after manual run"
+        description: "Send LINE notification"
         required: false
         type: boolean
         default: false
       force_line:
-        description: "Force LINE notification even if already sent today"
+        description: "Force LINE even if already sent today"
         required: false
         type: boolean
         default: false
@@ -26,7 +23,7 @@ permissions:
   contents: write
 
 jobs:
-  generate-tw-report:
+  generate-tw-morning:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -41,7 +38,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull --rebase --autostash origin main || true
           touch .nojekyll
-          mkdir -p taiwan cache
+          mkdir -p taiwan/morning cache
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -54,40 +51,30 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Move old Taiwan reports into taiwan folder
+      - name: Clear today's Gemini cache (ensure fresh data)
         run: |
-          shopt -s nullglob
+          TZ="Asia/Taipei" python - <<'PYEOF'
+          import datetime, pathlib, zoneinfo
+          today = datetime.datetime.now(zoneinfo.ZoneInfo("Asia/Taipei")).date().isoformat()
+          for f in pathlib.Path("cache").glob(f"gemini_tw_morning_{today}.json"):
+              f.unlink()
+              print(f"Deleted Gemini cache: {f}")
+          PYEOF
 
-          for file in tw/daily-tw-brief-*.html; do
-            base="$(basename "$file")"
-            git mv "$file" "taiwan/$base" || mv "$file" "taiwan/$base"
-          done
-
-          for file in daily-tw-brief-*.html; do
-            if [ -f "$file" ]; then
-              git mv "$file" "taiwan/$file" || mv "$file" "taiwan/$file"
-            fi
-          done
-
-          if [ -d tw ]; then
-            rm -rf tw
-          fi
-
-      - name: Generate Taiwan-only report
+      - name: Generate Taiwan morning report
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python scripts/generate_daily_report.py --region tw
+          python scripts/generate_daily_report.py --region tw_morning
 
       - name: Commit and push report
         run: |
-          git add .nojekyll taiwan cache
+          git add .nojekyll taiwan/morning cache
           git add -u
-
           if git diff --staged --quiet; then
-            echo "No new Taiwan report"
+            echo "No new report to commit"
           else
-            git commit -m "🤖 Daily Taiwan report"
+            git commit -m "🌅 Taiwan morning report $(date -u +%Y-%m-%d)"
             git push || (git pull --rebase --autostash origin main && git push)
           fi
 
@@ -95,7 +82,7 @@ jobs:
         if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
         run: sleep 45
 
-      - name: Send LINE notification
+      - name: Send LINE notification (群組)
         if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
@@ -108,10 +95,9 @@ jobs:
         if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
         run: |
           git add cache/line_push_log.json || true
-
           if git diff --staged --quiet; then
-            echo "No LINE push log changes"
+            echo "No push log changes"
           else
-            git commit -m "Update LINE push log"
+            git commit -m "Update LINE push log (tw-morning)"
             git push || (git pull --rebase --autostash origin main && git push)
           fi
