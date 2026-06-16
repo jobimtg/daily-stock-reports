@@ -202,13 +202,49 @@ REPO     = "daily-stock-reports"
 
 # Per-region settings: timezone, sections to include, output paths, file naming
 REGIONS = {
+    # ── 台灣晨報（08:55 開盤前）──────────────────────────────────────
+    # 資料來源：前一個交易日收盤 + 美股/期貨盤後走勢
+    # 報告定位：開盤前參考，讓讀者知道昨天收盤狀況與今日開盤預期
+    "tw_morning": {
+        "timezone":      "Asia/Taipei",
+        "city":          "Taipei, TW",
+        "report_type":   "morning",           # 晨報旗標，供模板判斷
+        "filename_fmt":  "tw-morning-{date}.html",
+        "summary_path":  "taiwan/morning/latest.json",
+        "output_subdir": "taiwan/morning",
+        "url_path_fmt":  "taiwan/morning/tw-morning-{date}.html",
+        "show_sections": ["taiex", "etf_tw", "top_taiex",
+                          "macro", "conclusion", "sources"],
+        "top_taiex_n":   25,
+        "etf_taiex_n":   25,
+    },
+    # ── 台灣收盤報（14:05 收盤後）────────────────────────────────────
+    # 資料來源：當日真實收盤資料（13:30 收盤後約 30 分鐘可取得）
+    # 報告定位：今日收盤完整分析
+    "tw_closing": {
+        "timezone":      "Asia/Taipei",
+        "city":          "Taipei, TW",
+        "report_type":   "closing",           # 收盤報旗標
+        "filename_fmt":  "tw-closing-{date}.html",
+        "summary_path":  "taiwan/closing/latest.json",
+        "output_subdir": "taiwan/closing",
+        "url_path_fmt":  "taiwan/closing/tw-closing-{date}.html",
+        "show_sections": ["taiex", "etf_tw", "top_taiex",
+                          "macro", "conclusion", "sources"],
+        "top_taiex_n":   25,
+        "etf_taiex_n":   25,
+    },
+    # ── 加拿大晨報（08:55 開盤前，溫哥華時間）───────────────────────
+    # 資料來源：前一個交易日收盤（TSX + TAIEX）+ 美股盤後
+    # 報告定位：開盤前完整參考，含投資組合
     "full": {
         "timezone":      "America/Vancouver",
         "city":          "Vancouver, BC",
+        "report_type":   "morning",
         "filename_fmt":  "daily-financial-brief-{date}.html",
-        "summary_path":  "canada/latest.json",
-        "output_subdir": "canada",
-        "url_path_fmt":  "canada/daily-financial-brief-{date}.html",
+        "summary_path":  "canada/morning/latest.json",
+        "output_subdir": "canada/morning",
+        "url_path_fmt":  "canada/morning/daily-financial-brief-{date}.html",
         "show_sections": ["tsx", "taiex", "etf_tw", "etf_ca",
                           "top_tsx", "top_taiex", "macro",
                           "conclusion", "portfolio", "sources"],
@@ -217,13 +253,15 @@ REGIONS = {
         "top_tsx_n":     15,
         "etf_ca_n":      15,
     },
+    # ── 舊別名（向下相容，不再使用於 workflow）───────────────────────
     "tw": {
         "timezone":      "Asia/Taipei",
         "city":          "Taipei, TW",
+        "report_type":   "morning",
         "filename_fmt":  "daily-tw-brief-{date}.html",
-        "summary_path":  "taiwan/latest.json",
-        "output_subdir": "taiwan",
-        "url_path_fmt":  "taiwan/daily-tw-brief-{date}.html",
+        "summary_path":  "taiwan/morning/latest.json",
+        "output_subdir": "taiwan/morning",
+        "url_path_fmt":  "taiwan/morning/daily-tw-brief-{date}.html",
         "show_sections": ["taiex", "etf_tw", "top_taiex",
                           "macro", "conclusion", "sources"],
         "top_taiex_n":   25,
