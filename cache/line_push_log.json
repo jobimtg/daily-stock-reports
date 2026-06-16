@@ -58,5 +58,10 @@
     "audience": "tw_group",
     "date": "2026-06-16",
     "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/daily-tw-brief-2026-06-16.html"
+  },
+  "tw_group_closing:2026-06-16": {
+    "audience": "tw_group_closing",
+    "date": "2026-06-16",
+    "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/closing/tw-closing-2026-06-16.html"
   }
 }
