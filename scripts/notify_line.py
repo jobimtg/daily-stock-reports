@@ -33,25 +33,32 @@ COLOR_TEXT = "#ffffff"
 
 AUDIENCE_CFG = {
     "me": {
-        "summary_path": "canada/latest.json",
+        "summary_path": "canada/morning/latest.json",
         "target_env": "LINE_USER_ID",
         "mode": "push",
         "card_title": "📈 每日北美財經晨報",
         "card_subtitle": "完整版（含投資組合）",
     },
     "tw_family": {
-        "summary_path": "taiwan/latest.json",
+        "summary_path": "taiwan/morning/latest.json",
         "target_env": "LINE_USER_IDS_TW_FAMILY",
         "mode": "multicast",
         "card_title": "📈 每日台股晨報",
         "card_subtitle": "Taiwan Market Daily Brief",
     },
     "tw_group": {
-        "summary_path": "taiwan/latest.json",
+        "summary_path": "taiwan/morning/latest.json",
         "target_env": "LINE_GROUP_ID",
         "mode": "push",
         "card_title": "📈 每日台股晨報",
         "card_subtitle": "Taiwan Market Daily Brief",
+    },
+    "tw_group_closing": {
+        "summary_path": "taiwan/closing/latest.json",
+        "target_env": "LINE_GROUP_ID",
+        "mode": "push",
+        "card_title": "📊 台股收盤報告",
+        "card_subtitle": "今日收盤完整分析",
     },
 }
 
@@ -145,9 +152,15 @@ def build_flex_message(summary, audience):
         body_contents.append({"type": "separator", "color": "#2a3a5e"})
 
     body_contents.append(build_index_row("🇹🇼", "TAIEX", taiex))
+    if audience == "tw_group_closing":
+        body_subtitle = "ETF 25 · Top 25 · 三大法人 · 融資融券"
+    elif audience in ("tw_family", "tw_group"):
+        body_subtitle = "ETF 25 · Top 25 · Macro"
+    else:
+        body_subtitle = "ETF · Top 15/25 · Macro · 投資組合"
     body_contents.append({
         "type": "text",
-        "text": "ETF 25 · Top 25 · Macro" if audience in ("tw_family", "tw_group") else "ETF · Top 15/25 · Macro · 投資組合",
+        "text": body_subtitle,
         "size": "xxs",
         "color": "#6e7891",
         "align": "center",
@@ -246,7 +259,7 @@ def post_json(url, payload, token):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--audience", choices=["me", "tw_family", "tw_group"], required=True)
+    parser.add_argument("--audience", choices=["me", "tw_family", "tw_group", "tw_group_closing"], required=True)
     args = parser.parse_args()
 
     cfg = AUDIENCE_CFG[args.audience]
