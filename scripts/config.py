@@ -6,19 +6,7 @@ The script picks the most relevant items each day from these universes.
 # ============================================================
 # Investment Portfolio (full report only — keeps it private)
 # ============================================================
-PORTFOLIO = [
-    {"ticker": "NVDA",      "name": "Nvidia CDR (Hedged)",       "type": "CDR"},
-    {"ticker": "SMCI",      "name": "Supermicro CDR (Hedged)",   "type": "CDR"},
-    {"ticker": "BCE.TO",    "name": "BCE Inc",                   "type": "TSX"},
-    {"ticker": "PDIV.TO",   "name": "Purpose Enhanced Dividend", "type": "ETF"},
-    {"ticker": "AQN.TO",    "name": "Algonquin Power & Util",    "type": "TSX"},
-    {"ticker": "PSA.TO",    "name": "Purpose HISA ETF",          "type": "ETF"},
-    {"ticker": "XEQT.TO",   "name": "iShares Core Equity ETF",   "type": "ETF"},
-    {"ticker": "BTCC.TO",   "name": "Purpose Bitcoin ETF (Hdg)", "type": "ETF"},
-    {"ticker": "T.TO",      "name": "Telus Corp",                "type": "TSX"},
-    {"ticker": "LB.TO",     "name": "Laurentian Bank",           "type": "TSX"},
-    {"ticker": "SOBO.TO",   "name": "South Bow Corp",            "type": "TSX"},
-]
+PORTFOLIO = []
 
 # ============================================================
 # TAIEX stock universe (~40 candidates, script picks 25 daily)
@@ -247,7 +235,7 @@ REGIONS = {
         "url_path_fmt":  "canada/morning/daily-financial-brief-{date}.html",
         "show_sections": ["tsx", "taiex", "etf_tw", "etf_ca",
                           "top_tsx", "top_taiex", "macro",
-                          "conclusion", "portfolio", "sources"],
+                          "conclusion", "sources"],
         "top_taiex_n":   25,
         "etf_taiex_n":   25,
         "top_tsx_n":     15,
