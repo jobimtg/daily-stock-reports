@@ -90,7 +90,7 @@ jobs:
           LINE_GROUP_ID: ${{ secrets.LINE_GROUP_ID }}
           LINE_FORCE_PUSH: ${{ github.event.inputs.force_line }}
         run: |
-          python scripts/notify_line.py --audience tw_group
+          python scripts/notify_line.py --audience tw_group_closing
 
       - name: Commit LINE push log
         if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
