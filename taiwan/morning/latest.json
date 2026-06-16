@@ -1,0 +1,17 @@
+{
+  "region": "tw_morning",
+  "date": "2026-06-16",
+  "date_str": "2026/06/16",
+  "weekday_zh": "週二",
+  "data_ref": "2026/06/15",
+  "taiex": {
+    "ticker": "^TWII",
+    "price": 45809.19140625,
+    "change": 1640.15234375,
+    "change_pct": 3.713353015059156,
+    "volume": 0
+  },
+  "tsx": null,
+  "filename": "tw-morning-2026-06-16.html",
+  "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/morning/tw-morning-2026-06-16.html"
+}
