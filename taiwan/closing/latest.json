@@ -1,0 +1,17 @@
+{
+  "region": "tw_closing",
+  "date": "2026-06-16",
+  "date_str": "2026/06/16",
+  "weekday_zh": "週二",
+  "data_ref": "2026/06/16",
+  "taiex": {
+    "ticker": "^TWII",
+    "price": 45693.51171875,
+    "change": 1524.47265625,
+    "change_pct": 3.451450809452393,
+    "volume": 0
+  },
+  "tsx": null,
+  "filename": "tw-closing-2026-06-16.html",
+  "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/closing/tw-closing-2026-06-16.html"
+}
