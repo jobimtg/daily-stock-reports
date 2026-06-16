@@ -581,12 +581,14 @@ def fallback_tw(taiex):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--region", choices=["full", "tw"], default="full")
+    parser.add_argument("--region", choices=["full", "tw", "tw_morning", "tw_closing"], default="full")
     parser.add_argument("--date",   help="Override report date (YYYY-MM-DD)")
     parser.add_argument("--output-dir", default=str(ROOT_DIR))
     args = parser.parse_args()
 
-    region_cfg = config.REGIONS[args.region]
+    # Normalise legacy "tw" → "tw_morning"
+    region_key = "tw_morning" if args.region == "tw" else args.region
+    region_cfg = config.REGIONS[region_key]
     tz = ZoneInfo(region_cfg["timezone"])
 
     # Report date = today in local timezone
@@ -600,14 +602,20 @@ def main():
     date_str    = date_obj.strftime("%Y/%m/%d")
     date_iso    = date_obj.isoformat()
 
-    # Data reference date: last weekday (market was closed on weekends)
-    data_ref = date_obj - dt.timedelta(days=1)
-    while data_ref.weekday() >= 5:
-        data_ref -= dt.timedelta(days=1)
+    # Data reference date:
+    # - Closing report (tw_closing): data IS today (market just closed at 13:30)
+    # - Morning report (tw_morning, full): data is the previous trading day
+    report_type = region_cfg.get("report_type", "morning")
+    if report_type == "closing":
+        data_ref = date_obj  # today's closing data
+    else:
+        data_ref = date_obj - dt.timedelta(days=1)
+        while data_ref.weekday() >= 5:
+            data_ref -= dt.timedelta(days=1)
     data_ref_str     = data_ref.strftime("%Y/%m/%d")
     data_ref_weekday = weekday_map[data_ref.weekday()]
 
-    print(f"=== {args.region.upper()} report: {date_iso} ({weekday_zh}) | data ref: {data_ref_str} ===")
+    print(f"=== {region_key.upper()} [{report_type}] report: {date_iso} ({weekday_zh}) | data ref: {data_ref_str} ===")
 
     # ---- Fetch market data ----
     print("[1/6] Fetching market data ...")
@@ -630,15 +638,15 @@ def main():
 
     us_idx = fetch_list(config.US_INDICES)
 
-    taiex_top = pick_movers(taiex_all,   region_cfg["top_taiex_n"], f"{args.region}_stocks")
-    tw_etfs   = pick_movers(tw_etfs_all, region_cfg["etf_taiex_n"], f"{args.region}_etfs")
+    taiex_top = pick_movers(taiex_all,   region_cfg["top_taiex_n"], f"{region_key}_stocks")
+    tw_etfs   = pick_movers(tw_etfs_all, region_cfg["etf_taiex_n"], f"{region_key}_etfs")
 
     tsx_index = None
     tsx_top   = []
     ca_etfs   = []
     portfolio = []
 
-    if args.region == "full":
+    if region_key == "full":
         tsx_index    = safe_fetch(config.TSX_INDEX_TICKER)
         tsx_all      = fetch_list(config.TSX_UNIVERSE, fetch_extra=True)
         ca_etfs_all  = fetch_list(config.CANADA_ETFS)
@@ -686,7 +694,7 @@ def main():
     else:
         margin_str = "資料暫無（TWSE API 未回應）"
 
-    if args.region == "full":
+    if region_key == "full":
         prompt = PROMPT_FULL.format(
             date=date_str, weekday=weekday_zh, city=region_cfg["city"],
             tsx_price=fmt_price(tsx_index.get("price"))      if tsx_index else "—",
@@ -714,7 +722,7 @@ def main():
         )
         fallback_fn = lambda: fallback_tw(taiex_index)
 
-    narrative = call_gemini(prompt, args.region, date_iso)
+    narrative = call_gemini(prompt, region_key, date_iso)
     if not narrative:
         print("  Using fallback narrative.")
         narrative = fallback_fn()
@@ -742,7 +750,7 @@ def main():
     nums = {s: i for i, s in enumerate(visible_sections, start=1)}
 
     html = template.render(
-        region=args.region,
+        region=region_key,
         show=set(region_cfg["show_sections"]),
         num=nums,
         city=region_cfg["city"],
@@ -780,7 +788,7 @@ def main():
     print("[6/6] Writing latest.json ...")
     url = f"https://{config.USERNAME}.github.io/{config.REPO}/{region_cfg['url_path_fmt'].format(date=date_iso)}"
     summary = {
-        "region":   args.region,
+        "region":   region_key,
         "date":     date_iso,
         "date_str": date_str,
         "weekday_zh": weekday_zh,
