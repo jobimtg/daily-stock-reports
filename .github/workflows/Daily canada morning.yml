@@ -2,8 +2,6 @@ name: Daily Canada Morning Report (加拿大晨報)
 
 on:
   schedule:
-    # 溫哥華 08:55 PDT = UTC 15:55（備援，GitHub 可能延遲）
-    # 溫哥華 08:55 PST = UTC 16:55（冬令時，cron-job.org 另行設定）
     - cron: "55 15 * * 1-5"
   repository_dispatch:
     types: [trigger-canada-morning]
@@ -26,8 +24,6 @@ permissions:
 jobs:
   build-canada-morning:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
@@ -41,6 +37,14 @@ jobs:
           touch .nojekyll
           mkdir -p canada/morning cache
 
+      - name: Restore cache (rotation + LINE push log)
+        uses: actions/cache@v4
+        with:
+          path: cache
+          key: report-cache-canada-${{ github.run_number }}
+          restore-keys: |
+            report-cache-canada-
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -50,18 +54,16 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
+          pip install -r requirements.txt
 
-      - name: Clear today's Gemini cache (ensure fresh data)
+      - name: Clear today's Gemini cache
         run: |
-          TZ="America/Vancouver" python - <<'PYEOF'
+          TZ="America/Vancouver" python3 - <<'PYEOF'
           import datetime, pathlib, zoneinfo
           today = datetime.datetime.now(zoneinfo.ZoneInfo("America/Vancouver")).date().isoformat()
           for f in pathlib.Path("cache").glob(f"gemini_full_{today}.json"):
               f.unlink()
-              print(f"Deleted Gemini cache: {f}")
+              print(f"Deleted: {f}")
           PYEOF
 
       - name: Generate Canada morning report
@@ -72,7 +74,8 @@ jobs:
 
       - name: Commit and push report
         run: |
-          git add .nojekyll index.html canada/morning cache
+          git add .nojekyll index.html canada/morning/
+
           if git diff --staged --quiet; then
             echo "No new report to commit"
           else
@@ -92,14 +95,3 @@ jobs:
           LINE_FORCE_PUSH: ${{ github.event.inputs.force_line }}
         run: |
           python scripts/notify_line.py --audience me
-
-      - name: Commit LINE push log
-        if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
-        run: |
-          git add cache/line_push_log.json || true
-          if git diff --staged --quiet; then
-            echo "No push log changes"
-          else
-            git commit -m "Update LINE push log (canada-morning)"
-            git push || (git pull --rebase --autostash origin main && git push)
-          fi
