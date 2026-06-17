@@ -2,8 +2,6 @@ name: Daily TW Closing Report (台灣收盤報)
 
 on:
   schedule:
-    # 台北 14:05 = UTC 06:05（備援，GitHub 可能延遲）
-    # 台股 13:30 收盤，14:05 有足夠時間讓 yfinance 取得當日收盤資料
     - cron: "5 6 * * 1-5"
   repository_dispatch:
     types: [trigger-tw-closing]
@@ -26,8 +24,6 @@ permissions:
 jobs:
   generate-tw-closing:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repo
@@ -41,6 +37,14 @@ jobs:
           touch .nojekyll
           mkdir -p taiwan/closing cache
 
+      - name: Restore cache (rotation + LINE push log)
+        uses: actions/cache@v4
+        with:
+          path: cache
+          key: report-cache-tw-closing-${{ github.run_number }}
+          restore-keys: |
+            report-cache-tw-closing-
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -52,14 +56,14 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Clear today's Gemini cache (ensure fresh closing data)
+      - name: Clear today's Gemini cache
         run: |
-          TZ="Asia/Taipei" python - <<'PYEOF'
+          TZ="Asia/Taipei" python3 - <<'PYEOF'
           import datetime, pathlib, zoneinfo
           today = datetime.datetime.now(zoneinfo.ZoneInfo("Asia/Taipei")).date().isoformat()
           for f in pathlib.Path("cache").glob(f"gemini_tw_closing_{today}.json"):
               f.unlink()
-              print(f"Deleted Gemini cache: {f}")
+              print(f"Deleted: {f}")
           PYEOF
 
       - name: Generate Taiwan closing report
@@ -70,8 +74,8 @@ jobs:
 
       - name: Commit and push report
         run: |
-          git add .nojekyll taiwan/closing cache
-          git add -u
+          git add .nojekyll taiwan/closing/
+
           if git diff --staged --quiet; then
             echo "No new report to commit"
           else
@@ -91,14 +95,3 @@ jobs:
           LINE_FORCE_PUSH: ${{ github.event.inputs.force_line }}
         run: |
           python scripts/notify_line.py --audience tw_group_closing
-
-      - name: Commit LINE push log
-        if: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event.inputs.send_line == 'true' }}
-        run: |
-          git add cache/line_push_log.json || true
-          if git diff --staged --quiet; then
-            echo "No push log changes"
-          else
-            git commit -m "Update LINE push log (tw-closing)"
-            git push || (git pull --rebase --autostash origin main && git push)
-          fi
