@@ -26,6 +26,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import requests
+import numpy as np
 import yfinance as yf
 from google import genai
 from google.genai import types
@@ -189,21 +190,164 @@ def fetch_list(items, fetch_extra=False):
     return out
 
 
+
+
+def fetch_etf_extra_info(items):
+    """Enrich ETF items with AUM, dividend yield, recent dividend from yfinance .info."""
+    for item in items:
+        try:
+            t = yf.Ticker(item["ticker"])
+            info = t.info or {}
+            aum = info.get("totalAssets")
+            if aum:
+                item["aum"] = aum
+                if aum >= 1e12:
+                    item["aum_str"] = f"{aum/1e12:.1f}兆"
+                elif aum >= 1e8:
+                    item["aum_str"] = f"{aum/1e8:.0f}億"
+                else:
+                    item["aum_str"] = f"{aum/1e6:.0f}M"
+            else:
+                item["aum_str"] = "—"
+            item["div_yield"] = info.get("yield") or info.get("dividendYield")
+            item["last_div"] = info.get("lastDividendValue")
+        except Exception:
+            item["aum_str"] = "—"
+            item["div_yield"] = None
+            item["last_div"] = None
+    return items
+
+
+def compute_signals(items):
+    """
+    Compute technical signals for stocks:
+    - RSI (14-day)
+    - Price vs 20-day / 60-day moving average
+    - Volume ratio vs 20-day average
+    Returns list of signal dicts.
+    """
+    import numpy as np
+    signals = []
+    for item in items:
+        try:
+            t = yf.Ticker(item["ticker"])
+            hist = t.history(period="3mo")
+            if hist.empty or len(hist) < 20:
+                continue
+            closes = hist["Close"].values
+            volumes = hist["Volume"].values
+
+            # RSI (14-day)
+            deltas = np.diff(closes)
+            gains = np.where(deltas > 0, deltas, 0)
+            losses = np.where(deltas < 0, -deltas, 0)
+            avg_gain = np.mean(gains[-14:])
+            avg_loss = np.mean(losses[-14:])
+            rsi = 100 - (100 / (1 + avg_gain / avg_loss)) if avg_loss > 0 else 100
+            item["rsi"] = round(rsi, 1)
+
+            # Moving averages
+            ma20 = np.mean(closes[-20:])
+            ma60 = np.mean(closes[-60:]) if len(closes) >= 60 else None
+            latest = closes[-1]
+            item["ma20"] = round(ma20, 2)
+            item["above_ma20"] = latest > ma20
+            if ma60:
+                item["ma60"] = round(ma60, 2)
+                item["above_ma60"] = latest > ma60
+
+            # Volume ratio (today vs 20-day avg)
+            vol_avg20 = np.mean(volumes[-20:])
+            vol_today = volumes[-1]
+            item["vol_ratio"] = round(vol_today / vol_avg20, 1) if vol_avg20 > 0 else None
+
+            # Generate signal labels
+            sigs = []
+            if rsi >= 70:
+                sigs.append({"type": "overbought", "icon": "🔴", "text": f"RSI {rsi:.0f} 過熱"})
+            elif rsi <= 30:
+                sigs.append({"type": "oversold", "icon": "🟢", "text": f"RSI {rsi:.0f} 超賣"})
+            if ma60 and not item.get("_prev_above_ma60", True) and latest > ma60:
+                sigs.append({"type": "ma_break", "icon": "🟢", "text": f"突破 60 日均線 {ma60:.0f}"})
+            if item.get("above_ma20") and item.get("above_ma60", False):
+                sigs.append({"type": "bullish", "icon": "🟢", "text": "站穩 20/60 日均線上方"})
+            if item.get("vol_ratio") and item["vol_ratio"] >= 2.0:
+                sigs.append({"type": "volume", "icon": "🟡", "text": f"成交量為均量 {item['vol_ratio']:.1f} 倍"})
+
+            if sigs:
+                signals.append({
+                    "ticker": item["ticker"],
+                    "name": item.get("name", ""),
+                    "price": item.get("price"),
+                    "change_pct": item.get("change_pct"),
+                    "rsi": rsi,
+                    "signals": sigs,
+                })
+        except Exception as e:
+            continue
+    return signals
+
+
+def fetch_tw_ipo():
+    """Fetch recent and upcoming Taiwan IPOs from TWSE."""
+    try:
+        url = "https://openapi.twse.com.tw/v1/company/newlisting"
+        resp = requests.get(url, timeout=15, headers={"Accept": "application/json"})
+        if resp.ok:
+            data = resp.json()
+            if isinstance(data, list):
+                recent = []
+                for row in data[:10]:
+                    recent.append({
+                        "code": row.get("Code", ""),
+                        "name": row.get("Name", ""),
+                        "date": row.get("ListingDate", ""),
+                        "industry": row.get("Industry", ""),
+                    })
+                return {"available": True, "items": recent}
+    except Exception as e:
+        print(f"  [warn] TWSE IPO fetch failed: {e}", file=sys.stderr)
+    return {"available": False, "items": []}
+
+
+def fetch_market_breadth():
+    """Fetch advance/decline/unchanged counts from TWSE."""
+    try:
+        url = "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX"
+        resp = requests.get(url, timeout=15, headers={"Accept": "application/json"})
+        if resp.ok:
+            data = resp.json()
+            if isinstance(data, list):
+                for row in data:
+                    idx_name = row.get("指數", "") or row.get("IndexName", "")
+                    if "發行量加權" in idx_name or "TAIEX" in idx_name.upper():
+                        return {
+                            "available": True,
+                            "advance": row.get("漲", row.get("Up", "—")),
+                            "decline": row.get("跌", row.get("Down", "—")),
+                            "unchanged": row.get("平", row.get("Unchanged", "—")),
+                        }
+    except Exception as e:
+        print(f"  [warn] TWSE breadth fetch failed: {e}", file=sys.stderr)
+    return {"available": False}
+
+
 # ============================================================
 # TWSE institutional flow (三大法人) + margin (融資融券)
 # ============================================================
 
-def fetch_twse_institutional():
+def fetch_twse_institutional(date_str=None):
     """
     Fetch three major institutional net buy/sell from TWSE open API.
+    date_str: optional YYYYMMDD for historical date (morning report uses previous day).
     Returns dict with foreign, investment_trust, dealer net values (TWD billion).
     """
     try:
-        url = "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX"
-        resp = requests.get(url, timeout=15, headers={"Accept": "application/json"})
-        resp.raise_for_status()
-        # Try the institutional flow endpoint
-        url2 = "https://openapi.twse.com.tw/v1/exchangeReport/FMSSCL"
+        # Try the daily institutional flow endpoint
+        if date_str:
+            url2 = f"https://openapi.twse.com.tw/v1/exchangeReport/FMSSCL?date={date_str}"
+        else:
+            url2 = "https://openapi.twse.com.tw/v1/exchangeReport/FMSSCL"
         resp2 = requests.get(url2, timeout=15, headers={"Accept": "application/json"})
         if resp2.ok:
             data = resp2.json()
@@ -361,8 +505,14 @@ PROMPT_FULL = """你是一位有 15 年以上經驗的繁體中文財經分析�
 【總體市場（含美股）】
 {macro}
 
-【投資組合】
-{portfolio}
+【技術面訊號摘要】
+{signals_summary}
+
+【IPO 近期上市】
+{ipo_summary}
+
+【市場廣度（漲跌家數）】
+{breadth}
 
 請只回傳有效 JSON，不要 markdown，不要解釋。格式：
 {{
@@ -375,8 +525,8 @@ PROMPT_FULL = """你是一位有 15 年以上經驗的繁體中文財經分析�
   "risks": ["強制 5 項風險，每項必須具體說明原因與影響，禁止通用模板"],
   "watch_points": ["強制 5 項觀察重點，每項針對今日具體狀況"],
   "suggestion": "1 段針對今日市場狀況的具體建議",
-  "portfolio_observations": ["5 項概念性觀察，禁止具體百分比/金額"],
-  "position_health": ["4 項概念性部位健檢"]
+  "signals_insight": "2-3 句技術面訊號解讀，引用具體個股的 RSI/均線/量能數據",
+  "ipo_insight": "1 句近期 IPO 觀察（若無資料填 null）"
 }}"""
 
 PROMPT_TW = """你是一位有 15 年以上經驗的繁體中文財經分析師。針對台灣讀者撰寫今日台股財經報告。
@@ -402,6 +552,15 @@ PROMPT_TW = """你是一位有 15 年以上經驗的繁體中文財經分析師�
 【總體市場（含美股，影響今日開盤）】
 {macro}
 
+【技術面訊號摘要】
+{signals_summary}
+
+【市場廣度（漲跌家數）】
+{breadth}
+
+【IPO 近期上市】
+{ipo_summary}
+
 請只回傳有效 JSON，不要 markdown，不要解釋。格式：
 {{
   "taiex_summary": "2-3 句 TAIEX 走勢摘要，必須引用具體點位與漲跌幅，說明主要驅動族群",
@@ -410,7 +569,9 @@ PROMPT_TW = """你是一位有 15 年以上經驗的繁體中文財經分析師�
   "margin_insight": "融資餘額增減說明與散戶槓桿判讀（若無數據填 null）",
   "risks": ["強制 5 項風險，每項具體說明今日市場背景，禁止通用模板"],
   "watch_points": ["強制 5 項觀察重點，針對今日具體狀況與明日展望"],
-  "suggestion": "針對今日數據的具體操作建議"
+  "suggestion": "針對今日數據的具體操作建議",
+  "signals_insight": "2-3 句技術面訊號解讀，引用具體個股 RSI/均線/量能",
+  "ipo_insight": "1 句近期 IPO 觀察（若無資料填 null）"
 }}"""
 
 
@@ -526,19 +687,8 @@ def fallback_full(tsx, taiex):
             "VIX 恐慌指數是否持續回落",
         ],
         "suggestion": "今日市場以觀察為主，建議持盈保泰，注意量能是否配合漲勢。",
-        "portfolio_observations": [
-            "AI/Tech 為主要部位：留意波動敏感度",
-            "加拿大電信與公用事業為次要部位：利率敏感",
-            "現金管理部位：提供穩定避險功能",
-            "加密曝險：跟隨 BTC 波動",
-            "全球分散部位：受惠國際分散",
-        ],
-        "position_health": [
-            "集中度觀察：留意主要部位的市場敏感度",
-            "表現落後標的：評估是否續抱",
-            "表現強勁標的：可考慮再平衡",
-            "產業分散度：科技、金融、電信、公用、現金五大領域",
-        ],
+        "signals_insight": "技術面訊號請參考報告中的訊號雷達區塊。",
+        "ipo_insight": None,
     }
 
 
@@ -572,6 +722,8 @@ def fallback_tw(taiex):
             "大盤量能是否達到 3,000 億以上確認趨勢",
         ],
         "suggestion": f"台股今日{tw_dir} {taiex_pct_str}，建議關注外資動向與量能變化，以此判斷趨勢持續性，避免在量縮時追高。",
+        "signals_insight": "技術面訊號請參考報告中的訊號雷達區塊。",
+        "ipo_insight": None,
     }
 
 
@@ -652,19 +804,35 @@ def main():
         ca_etfs_all  = fetch_list(config.CANADA_ETFS)
         tsx_top      = pick_movers(tsx_all,     region_cfg["top_tsx_n"],  "full_tsx_stocks")
         ca_etfs      = pick_movers(ca_etfs_all, region_cfg["etf_ca_n"],   "full_ca_etfs")
-        portfolio    = fetch_list(config.PORTFOLIO)
-        for p in portfolio:
-            arr, cls = arrow_for(p.get("change_pct"))
-            p["arrow"]       = arr
-            p["arrow_class"] = cls
+        pass  # Portfolio removed for ad compliance
 
     # ---- Fetch TWSE institutional & margin ----
     print("[2/6] Fetching TWSE institutional flow & margin ...")
-    institutional = fetch_twse_institutional()
-    margin_data   = fetch_twse_margin()
+    # Morning reports: fetch previous trading day's data (TWSE updates after 3PM)
+    if report_type == "morning":
+        inst_date = data_ref.strftime("%Y%m%d")
+        institutional = fetch_twse_institutional(date_str=inst_date)
+    else:
+        institutional = fetch_twse_institutional()
+    margin_data = fetch_twse_margin()
+
+    # Market breadth (advance/decline)
+    print("[2.5/6] Fetching market breadth, signals, IPO ...")
+    breadth = fetch_market_breadth()
+
+    # Technical signals for top stocks
+    signals = compute_signals(taiex_top[:15])
+
+    # ETF extra info (AUM, dividend)
+    tw_etfs = fetch_etf_extra_info(tw_etfs)
+    if region_key == "full" and ca_etfs:
+        ca_etfs = fetch_etf_extra_info(ca_etfs)
+
+    # IPO tracking
+    ipo_data = fetch_tw_ipo()
 
     # ---- Build Gemini prompt ----
-    print("[3/6] Calling Gemini for narrative ...")
+    print("[3/7] Calling Gemini for narrative ...")
 
     def stock_line(s):
         vol_str = fmt_vol(s.get("volume"))
@@ -694,6 +862,24 @@ def main():
     else:
         margin_str = "資料暫無（TWSE API 未回應）"
 
+    # Build signals summary for prompt
+    signals_summary = "\n".join(
+        f"- {s['name']}({s['ticker']}): RSI {s['rsi']:.0f}, " + 
+        ", ".join(sig['text'] for sig in s['signals'])
+        for s in signals
+    ) if signals else "無顯著技術訊號"
+
+    breadth_str = (
+        f"上漲 {breadth.get('advance', '—')} 家 / "
+        f"下跌 {breadth.get('decline', '—')} 家 / "
+        f"持平 {breadth.get('unchanged', '—')} 家"
+    ) if breadth.get("available") else "資料暫無"
+
+    ipo_summary = "\n".join(
+        f"- {i['code']} {i['name']} ({i['date']}) {i['industry']}"
+        for i in (ipo_data.get("items") or [])[:5]
+    ) if ipo_data.get("available") else "近期無新股上市"
+
     if region_key == "full":
         prompt = PROMPT_FULL.format(
             date=date_str, weekday=weekday_zh, city=region_cfg["city"],
@@ -706,7 +892,9 @@ def main():
             institutional=inst_str,
             margin=margin_str,
             macro="\n".join(f"- {m['name']}: {fmt_price(m.get('price'))} ({fmt_pct(m.get('change_pct'))})" for m in macro_raw),
-            portfolio="\n".join(f"- {p['ticker']} {p['name']} {fmt_pct(p.get('change_pct'))}" for p in portfolio),
+            signals_summary=signals_summary,
+            breadth=breadth_str,
+            ipo_summary=ipo_summary,
         )
         fallback_fn = lambda: fallback_full(tsx_index, taiex_index)
     else:
@@ -719,6 +907,9 @@ def main():
             institutional=inst_str,
             margin=margin_str,
             macro="\n".join(f"- {m['name']}: {fmt_price(m.get('price'))} ({fmt_pct(m.get('change_pct'))})" for m in (macro_raw + us_idx)),
+            signals_summary=signals_summary,
+            breadth=breadth_str,
+            ipo_summary=ipo_summary,
         )
         fallback_fn = lambda: fallback_tw(taiex_index)
 
@@ -728,7 +919,7 @@ def main():
         narrative = fallback_fn()
 
     # ---- Render HTML ----
-    print("[4/6] Rendering HTML ...")
+    print("[4/7] Rendering HTML ...")
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
         autoescape=select_autoescape(["html", "xml"]),
@@ -739,7 +930,7 @@ def main():
     template = env.get_template("report.html.j2")
 
     visible_sections = []
-    for key in ["tsx", "taiex", "etf", "top", "macro", "conclusion", "portfolio"]:
+    for key in ["tsx", "taiex", "etf", "top", "macro", "conclusion", "signals", "ipo"]:
         if key == "etf"   and ("etf_tw"  in region_cfg["show_sections"] or "etf_ca"  in region_cfg["show_sections"]):
             visible_sections.append("etf")
         elif key == "top" and ("top_tsx" in region_cfg["show_sections"] or "top_taiex" in region_cfg["show_sections"]):
@@ -747,6 +938,10 @@ def main():
         elif key in region_cfg["show_sections"]:
             visible_sections.append(key)
     visible_sections.append("sources")
+    # Ensure signals/ipo are in nums even if no data
+    for extra in ["signals", "ipo"]:
+        if extra not in visible_sections and extra in region_cfg.get("show_sections", []):
+            visible_sections.insert(-1, extra)
     nums = {s: i for i, s in enumerate(visible_sections, start=1)}
 
     html = template.render(
@@ -766,7 +961,6 @@ def main():
         ca_etfs=ca_etfs,
         macro=macro_raw,
         us_idx=us_idx,
-        portfolio=portfolio,
         institutional=institutional,
         margin_data=margin_data,
         n=narrative,
@@ -774,7 +968,7 @@ def main():
     )
 
     # ---- Save ----
-    print("[5/6] Saving HTML ...")
+    print("[5/7] Saving HTML ...")
     out_root = Path(args.output_dir)
     subdir   = region_cfg["output_subdir"]
     out_dir  = out_root / subdir if subdir else out_root
@@ -785,7 +979,7 @@ def main():
     print(f"  ✅ {output_path} ({output_path.stat().st_size:,} bytes)")
 
     # ---- latest.json ----
-    print("[6/6] Writing latest.json ...")
+    print("[6/7] Writing latest.json ...")
     url = f"https://{config.USERNAME}.github.io/{config.REPO}/{region_cfg['url_path_fmt'].format(date=date_iso)}"
     summary = {
         "region":   region_key,
