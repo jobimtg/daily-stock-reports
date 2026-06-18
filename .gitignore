@@ -1,15 +1,12 @@
-# Sensitive data - never commit
 cache/
 __pycache__/
 *.pyc
 .env
 *.log
 
-# IDE
 .vscode/
 .idea/
 
-# Temp
 *.tmp
 *.bak
 .DS_Store
