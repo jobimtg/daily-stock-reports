@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% if region == 'tw' %}每日台股報告{% else %}每日財經晨報{% endif %} — {{ date_str }}</title>
+<title>{% if region == 'tw_closing' %}台股收盤報告{% elif region in ('tw_morning', 'tw') %}台股開盤前晨報{% else %}加拿大財經晨報{% endif %} — {{ date_str }}</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -97,7 +97,7 @@ footer{text-align:center;margin-top:24px;padding:16px 0;color:var(--text-muted);
 
   <header>
     <a href="/daily-stock-reports/index.html" class="back-link">← 回首頁</a>
-    <h1>{% if region == 'tw' %}📈 每日台股報告{% else %}📈 每日財經晨報{% endif %}</h1>
+    <h1>{% if region == 'tw_closing' %}📊 台股收盤報告{% elif region in ('tw_morning', 'tw') %}🌅 台股開盤前晨報{% else %}🇨🇦 加拿大財經晨報{% endif %}</h1>
     <div class="report-date">{{ date_str }}（{{ weekday_zh }}）· {{ city }}</div>
     <div style="margin-top:6px;"><span style="background:{% if report_type == 'closing' %}rgba(100,255,218,0.15){% else %}rgba(255,169,77,0.15){% endif %};color:{% if report_type == 'closing' %}var(--accent){% else %}var(--orange){% endif %};padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">{% if report_type == "closing" %}📊 收盤總結{% else %}🌅 開盤前分析{% endif %}</span></div>
   </header>
