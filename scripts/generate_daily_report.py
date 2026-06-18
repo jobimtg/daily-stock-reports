@@ -33,6 +33,7 @@ from google.genai import types
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 import config
+import tw_market
 
 SCRIPT_DIR   = Path(__file__).parent
 ROOT_DIR     = SCRIPT_DIR.parent
@@ -773,8 +774,27 @@ def main():
     print("[1/6] Fetching market data ...")
 
     taiex_index = safe_fetch(config.TAIEX_INDEX_TICKER)
-    taiex_all   = fetch_list(config.TAIEX_UNIVERSE, fetch_extra=True)
-    tw_etfs_all = fetch_list(config.TAIEX_ETFS,    fetch_extra=False)
+
+    # Primary: TWSE/TPEX bulk API (reliable for TW tickers)
+    # Fallback: yfinance one-by-one
+    print("  Trying TWSE/TPEX bulk API ...")
+    tw_stocks_api, tw_etfs_api, _ = tw_market.fetch_tw_market(
+        top_stocks=region_cfg.get("top_taiex_n", 25),
+        top_etfs=region_cfg.get("etf_taiex_n", 25),
+    )
+    if tw_stocks_api:
+        taiex_all = tw_stocks_api
+        print(f"  TWSE API: {len(taiex_all)} stocks")
+    else:
+        print("  TWSE API failed → yfinance fallback")
+        taiex_all = fetch_list(config.TAIEX_UNIVERSE, fetch_extra=True)
+
+    if tw_etfs_api:
+        tw_etfs_all = tw_etfs_api
+        print(f"  TWSE API: {len(tw_etfs_all)} ETFs")
+    else:
+        print("  TWSE ETF API failed → yfinance fallback")
+        tw_etfs_all = fetch_list(config.TAIEX_ETFS, fetch_extra=False)
 
     # Fix TWD/USD separately (inverted display)
     macro_raw = []
@@ -963,6 +983,10 @@ def main():
         us_idx=us_idx,
         institutional=institutional,
         margin_data=margin_data,
+        signals=signals,
+        breadth=breadth,
+        ipo_data=ipo_data,
+        report_type=report_type,
         n=narrative,
         index_link=(("../" * len(Path(region_cfg.get("output_subdir", "")).parts)) + "index.html") if region_cfg.get("output_subdir") else "index.html",
     )
