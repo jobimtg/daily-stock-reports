@@ -388,14 +388,14 @@ footer{text-align:center;margin-top:24px;padding:16px 0;color:var(--text-muted);
   {% endif %}
 
   {# ── IPO Tracking ── #}
-  {% if 'ipo' in show and ipo_data and ipo_data.available and ipo_data.items %}
+  {% if 'ipo' in show and ipo_data and ipo_data['available'] and ipo_data['items'] %}
   <section>
     <h2><span class="num">{{ num.ipo }}</span>近期 IPO 追蹤</h2>
     <div class="table-wrap">
       <table>
         <thead><tr><th>代號</th><th>公司名稱</th><th>上市日期</th><th>產業</th></tr></thead>
         <tbody>
-          {% for i in ipo_data.items %}
+          {% for i in ipo_data['items'] %}
           <tr>
             <td class="ticker">{{ i.code }}</td>
             <td>{{ i.name }}</td>
