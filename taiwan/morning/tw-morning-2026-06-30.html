@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股開盤前晨報 — 2026/06/30</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-start:#1a1a2e; --bg-mid:#16213e; --bg-end:#0f3460;
+  --card-bg:rgba(255,255,255,0.06); --card-border:rgba(255,255,255,0.08);
+  --text:#fff; --text-dim:#a8b2d1; --text-muted:#6e7891;
+  --accent:#64ffda; --red:#ff6b6b; --green:#51cf66; --orange:#ffa94d;
+  --note-bg:rgba(100,255,218,0.06);
+}
+html,body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;
+  background:linear-gradient(135deg,var(--bg-start) 0%,var(--bg-mid) 50%,var(--bg-end) 100%);
+  min-height:100vh; color:var(--text); -webkit-font-smoothing:antialiased; line-height:1.6;
+}
+.container{max-width:920px;margin:0 auto;padding:24px 16px 60px;}
+header{text-align:center;padding:28px 0 20px;}
+.back-link{display:inline-block;color:var(--text-dim);text-decoration:none;font-size:13px;margin-bottom:16px;}
+.back-link:hover{color:var(--accent);}
+h1{font-size:26px;font-weight:700;letter-spacing:-0.3px;margin-bottom:4px;}
+.report-date{color:var(--text-dim);font-size:14px;margin-bottom:6px;}
+
+/* Data reference notice banner */
+.data-ref-banner{
+  background:rgba(255,169,77,0.10);border:1px solid rgba(255,169,77,0.25);
+  border-radius:10px;padding:10px 16px;margin:0 0 16px;
+  font-size:12px;color:var(--orange);text-align:center;
+}
+.data-ref-banner strong{color:var(--orange);}
+
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0;}
+.sum-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:16px;backdrop-filter:blur(10px);}
+.sum-card .label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.sum-card .value{font-size:22px;font-weight:700;}
+.sum-card .change{font-size:13px;font-weight:600;margin-top:4px;}
+.up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--text-dim);}
+.arrow-cell{text-align:center;font-size:16px;font-weight:700;}
+section{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-bottom:16px;backdrop-filter:blur(10px);}
+section h2{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--card-border);}
+section h2 .num{background:var(--accent);color:#0f3460;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+section p{color:var(--text-dim);font-size:14px;margin-bottom:8px;}
+section p strong{color:var(--text);}
+section ul{padding-left:20px;color:var(--text-dim);font-size:14px;}
+section ul li{margin-bottom:5px;}
+section ul li strong{color:var(--text);}
+.subheading{color:var(--accent);font-size:13px;font-weight:600;margin:14px 0 6px;padding:4px 10px;background:rgba(100,255,218,0.06);border-radius:6px;display:inline-block;}
+.table-wrap{overflow-x:auto;margin:6px -4px;-webkit-overflow-scrolling:touch;}
+table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px;}
+thead th{background:rgba(100,255,218,0.08);color:var(--accent);font-weight:600;padding:9px 10px;text-align:left;font-size:12px;letter-spacing:0.3px;border-bottom:1px solid var(--card-border);}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--card-border);color:var(--text-dim);}
+tbody td:first-child{color:var(--text);font-weight:600;}
+tbody tr:hover{background:rgba(255,255,255,0.03);}
+tbody tr:last-child td{border-bottom:none;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;}
+.ticker{color:var(--accent)!important;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;}
+.vol-cell{color:var(--text-muted);font-size:12px;}
+.pos-bar-wrap{display:flex;align-items:center;gap:6px;min-width:80px;}
+.pos-bar{height:5px;background:rgba(255,255,255,0.1);border-radius:3px;flex:1;overflow:hidden;}
+.pos-bar-fill{height:100%;background:var(--accent);border-radius:3px;}
+.pos-pct{font-size:10px;color:var(--text-muted);white-space:nowrap;}
+
+/* Institutional & margin cards */
+.inst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;}
+.inst-card{background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;text-align:center;}
+.inst-card .inst-label{font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+.inst-card .inst-val{font-size:16px;font-weight:700;}
+.margin-row{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0;font-size:13px;color:var(--text-dim);}
+.margin-row span strong{color:var(--text);}
+
+.risk-box{background:rgba(255,107,107,0.08);border-left:3px solid var(--red);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.watch-box{background:rgba(255,169,77,0.08);border-left:3px solid var(--orange);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.suggest-box{background:rgba(100,255,218,0.08);border-left:3px solid var(--accent);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.risk-box h3,.watch-box h3,.suggest-box h3{font-size:13px;font-weight:700;margin-bottom:6px;}
+.risk-box h3{color:var(--red);} .watch-box h3{color:var(--orange);} .suggest-box h3{color:var(--accent);}
+.risk-box ol,.watch-box ul{margin-left:18px;color:var(--text-dim);font-size:13px;}
+.risk-box ol li,.watch-box ul li{margin-bottom:5px;}
+.suggest-box p{font-size:13px;color:var(--text);margin:0;}
+.sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.sources a{background:rgba(100,255,218,0.08);color:var(--accent);padding:6px 12px;border-radius:20px;font-size:12px;text-decoration:none;border:1px solid rgba(100,255,218,0.2);}
+.sources a:hover{background:rgba(100,255,218,0.15);}
+.notice{font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;}
+footer{text-align:center;margin-top:24px;padding:16px 0;color:var(--text-muted);font-size:11px;border-top:1px solid var(--card-border);}
+@media(max-width:600px){
+  .inst-grid{grid-template-columns:1fr 1fr;}
+  h1{font-size:22px;} .sum-card .value{font-size:18px;} section{padding:16px;} section h2{font-size:15px;} table{font-size:12px;} thead th,tbody td{padding:7px 8px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <a href="/daily-stock-reports/index.html" class="back-link">← 回首頁</a>
+    <h1>🌅 台股開盤前晨報</h1>
+    <div class="report-date">2026/06/30（週二）· Taipei, TW</div>
+    <div style="margin-top:6px;"><span style="background:rgba(255,169,77,0.15);color:var(--orange);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">🌅 開盤前分析</span></div>
+  </header>
+
+  
+  <div class="data-ref-banner">
+    📋 本報告資料截至 <strong>2026/06/29（週一）收盤</strong>，供 2026/06/30 今日收盤後回顧與明日盤前參考。即時數據請以交易所為準。
+  </div>
+
+  
+  <div class="summary">
+    
+    <div class="sum-card">
+      <div class="label">🇹🇼 TAIEX 加權指數</div>
+      <div class="value">44,999.90</div>
+      <div class="change up">▲ 428.14 (+0.96%)</div>
+    </div>
+  </div>
+
+  
+  
+
+  
+  <section>
+    <h2><span class="num">1</span>台灣股市 TAIEX</h2>
+    <p>台股今日（2026/06/29）收盤上漲 0.96%，指數來到 44,999.90 點。主要由半導體、電子零組件、金融及塑化類股的強勁表現所驅動。</p>
+    <p><strong>走勢重點：</strong></p>
+    <ul><li>電子權值股表現分歧：瑞昱大漲 5.81% 收 783.00 元，台達電上漲 5.25% 收 1,905.00 元，聯詠上漲 2.75% 收 523.00 元，台積電上漲 1.28% 收 2,370.00 元，聯發科上漲 0.77% 收 3,910.00 元，顯示半導體及電子零組件類股仍具動能。</li><li>金融股漲跌互見：台新金上漲 3.45% 收 33.00 元，且 52 週位置達 100.0%，表現強勁；然而富邦金下跌 4.10% 收 128.50 元，國泰金下跌 4.25% 收 98.00 元，顯示金融類股內部出現明顯分歧。</li><li>塑化類股同步走揚：台塑化上漲 3.36% 收 55.30 元，南亞上漲 2.36% 收 151.50 元，台塑上漲 1.92% 收 52.70 元，整體塑化族群在原油價格上漲（WTI 原油 +1.42%，Brent 原油 +2.06%）的背景下表現亮眼。</li><li>航運股止跌反彈：陽明海運上漲 2.59% 收 51.40 元，萬海上漲 2.48% 收 78.60 元，長榮海運上漲 1.66% 收 184.00 元，儘管部分個股 52 週位置仍處低檔（陽明 18.4%，萬海 26.5%，長榮 35.1%），但今日呈現反彈走勢。</li><li>部分高價股大幅修正：大立光重挫 7.20% 收 4,380.00 元，南電下跌 4.00% 收 1,080.00 元，文曄下跌 3.02% 收 209.00 元，顯示市場對部分高價股或特定族群進行獲利了結或修正。</li></ul>
+
+    
+    
+
+    
+    
+  </section>
+
+  
+  
+  <section>
+    <h2><span class="num">2</span>ETF 每日精選</h2>
+    <p>依今日市場走勢輪動挑選，每日非核心標的自動更換避免重複。</p>
+
+    
+    <div class="subheading">🇹🇼 台灣 ETF（每日動態輪動 · 12 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th class="num">成交量</th><th class="num">規模</th><th class="num">配息率</th><th>類型</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">00757</td>
+            <td>統一 FANG+</td>
+            <td class="num">125.30</td>
+            <td class="num up">+2.41%</td>
+            <td class="num vol-cell">1.7M</td>
+            <td class="num vol-cell">396億</td>
+            <td class="num ">—</td>
+            <td>美科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00850</td>
+            <td>元大臺灣 ESG 永續</td>
+            <td class="num">89.25</td>
+            <td class="num up">+1.36%</td>
+            <td class="num vol-cell">837K</td>
+            <td class="num vol-cell">372億</td>
+            <td class="num up">3.3%</td>
+            <td>ESG</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">0050</td>
+            <td>元大台灣 50</td>
+            <td class="num">104.45</td>
+            <td class="num up">+1.31%</td>
+            <td class="num vol-cell">101.5M</td>
+            <td class="num vol-cell">2.0兆</td>
+            <td class="num up">1.3%</td>
+            <td>大盤</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00940</td>
+            <td>元大台灣價值高息</td>
+            <td class="num">12.50</td>
+            <td class="num up">+1.30%</td>
+            <td class="num vol-cell">0</td>
+            <td class="num vol-cell">691億</td>
+            <td class="num up">4.2%</td>
+            <td>價值+息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00713</td>
+            <td>元大台灣高息低波</td>
+            <td class="num">60.15</td>
+            <td class="num up">+0.84%</td>
+            <td class="num vol-cell">0</td>
+            <td class="num vol-cell">1043億</td>
+            <td class="num up">6.1%</td>
+            <td>低波動</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00891</td>
+            <td>中信關鍵半導體</td>
+            <td class="num">36.04</td>
+            <td class="num up">+0.64%</td>
+            <td class="num vol-cell">17.1M</td>
+            <td class="num vol-cell">638億</td>
+            <td class="num up">8.4%</td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00895</td>
+            <td>富邦未來車</td>
+            <td class="num">50.60</td>
+            <td class="num up">+0.60%</td>
+            <td class="num vol-cell">941K</td>
+            <td class="num vol-cell">81億</td>
+            <td class="num ">—</td>
+            <td>電動車</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00878</td>
+            <td>國泰永續高股息</td>
+            <td class="num">32.90</td>
+            <td class="num up">+0.58%</td>
+            <td class="num vol-cell">37.5M</td>
+            <td class="num vol-cell">5801億</td>
+            <td class="num up">6.1%</td>
+            <td>ESG 高息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00885</td>
+            <td>富邦越南</td>
+            <td class="num">18.98</td>
+            <td class="num up">+0.53%</td>
+            <td class="num vol-cell">4.5M</td>
+            <td class="num vol-cell">123億</td>
+            <td class="num ">—</td>
+            <td>越南</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00770</td>
+            <td>國泰北美科技</td>
+            <td class="num">66.55</td>
+            <td class="num up">+0.23%</td>
+            <td class="num vol-cell">206K</td>
+            <td class="num vol-cell">57億</td>
+            <td class="num up">6.1%</td>
+            <td>美股科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00701</td>
+            <td>國泰股利精選 30</td>
+            <td class="num">39.14</td>
+            <td class="num down">-0.18%</td>
+            <td class="num vol-cell">655K</td>
+            <td class="num vol-cell">60億</td>
+            <td class="num up">7.3%</td>
+            <td>高股息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00919</td>
+            <td>群益台灣精選高息</td>
+            <td class="num">29.46</td>
+            <td class="num down">-0.34%</td>
+            <td class="num vol-cell">101.8M</td>
+            <td class="num vol-cell">5081億</td>
+            <td class="num up">8.9%</td>
+            <td>高股息</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">3</span>台股重點股</h2>
+
+    
+
+    <div class="subheading">🇹🇼 TAIEX（依漲跌幅 · 25 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價(TWD)</th><th class="num">漲跌幅</th><th class="num">成交量</th><th>52週位置</th><th>產業</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">2379</td>
+            <td>瑞昱</td>
+            <td class="num">783.00</td>
+            <td class="num up">+5.81%</td>
+            <td class="num vol-cell">6.0M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:74.3%"></div></div>
+                <span class="pos-pct">74.3%</span>
+              </div>
+              
+            </td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2308</td>
+            <td>台達電</td>
+            <td class="num">1,905.00</td>
+            <td class="num up">+5.25%</td>
+            <td class="num vol-cell">15.5M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:71.3%"></div></div>
+                <span class="pos-pct">71.3%</span>
+              </div>
+              
+            </td>
+            <td>電源/AI</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2887</td>
+            <td>台新金</td>
+            <td class="num">33.00</td>
+            <td class="num up">+3.45%</td>
+            <td class="num vol-cell">84.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:100.0%"></div></div>
+                <span class="pos-pct">100.0%</span>
+              </div>
+              
+            </td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6505</td>
+            <td>台塑化</td>
+            <td class="num">55.30</td>
+            <td class="num up">+3.36%</td>
+            <td class="num vol-cell">7.7M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:64.0%"></div></div>
+                <span class="pos-pct">64.0%</span>
+              </div>
+              
+            </td>
+            <td>塑化</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3034</td>
+            <td>聯詠</td>
+            <td class="num">523.00</td>
+            <td class="num up">+2.75%</td>
+            <td class="num vol-cell">5.6M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:78.6%"></div></div>
+                <span class="pos-pct">78.6%</span>
+              </div>
+              
+            </td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2609</td>
+            <td>陽明海運</td>
+            <td class="num">51.40</td>
+            <td class="num up">+2.59%</td>
+            <td class="num vol-cell">17.9M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:18.4%"></div></div>
+                <span class="pos-pct">18.4%</span>
+              </div>
+              
+            </td>
+            <td>航運</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2615</td>
+            <td>萬海</td>
+            <td class="num">78.60</td>
+            <td class="num up">+2.48%</td>
+            <td class="num vol-cell">5.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:26.5%"></div></div>
+                <span class="pos-pct">26.5%</span>
+              </div>
+              
+            </td>
+            <td>航運</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">1303</td>
+            <td>南亞</td>
+            <td class="num">151.50</td>
+            <td class="num up">+2.36%</td>
+            <td class="num vol-cell">26.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:96.5%"></div></div>
+                <span class="pos-pct">96.5%</span>
+              </div>
+              
+            </td>
+            <td>塑化</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">1301</td>
+            <td>台塑</td>
+            <td class="num">52.70</td>
+            <td class="num up">+1.92%</td>
+            <td class="num vol-cell">21.5M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:80.4%"></div></div>
+                <span class="pos-pct">80.4%</span>
+              </div>
+              
+            </td>
+            <td>塑化</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2376</td>
+            <td>技嘉</td>
+            <td class="num">325.00</td>
+            <td class="num up">+1.72%</td>
+            <td class="num vol-cell">4.8M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:60.0%"></div></div>
+                <span class="pos-pct">60.0%</span>
+              </div>
+              
+            </td>
+            <td>AI 伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2603</td>
+            <td>長榮海運</td>
+            <td class="num">184.00</td>
+            <td class="num up">+1.66%</td>
+            <td class="num vol-cell">17.5M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:35.1%"></div></div>
+                <span class="pos-pct">35.1%</span>
+              </div>
+              
+            </td>
+            <td>航運</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">4938</td>
+            <td>和碩</td>
+            <td class="num">82.20</td>
+            <td class="num up">+1.48%</td>
+            <td class="num vol-cell">26.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:58.3%"></div></div>
+                <span class="pos-pct">58.3%</span>
+              </div>
+              
+            </td>
+            <td>代工</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">1216</td>
+            <td>統一</td>
+            <td class="num">75.70</td>
+            <td class="num up">+1.47%</td>
+            <td class="num vol-cell">9.5M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:46.2%"></div></div>
+                <span class="pos-pct">46.2%</span>
+              </div>
+              
+            </td>
+            <td>食品</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2382</td>
+            <td>廣達</td>
+            <td class="num">367.00</td>
+            <td class="num up">+1.38%</td>
+            <td class="num vol-cell">11.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:69.4%"></div></div>
+                <span class="pos-pct">69.4%</span>
+              </div>
+              
+            </td>
+            <td>伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">5871</td>
+            <td>中租-KY</td>
+            <td class="num">115.00</td>
+            <td class="num up">+1.32%</td>
+            <td class="num vol-cell">6.6M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:66.0%"></div></div>
+                <span class="pos-pct">66.0%</span>
+              </div>
+              
+            </td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2330</td>
+            <td>台積電</td>
+            <td class="num">2,370.00</td>
+            <td class="num up">+1.28%</td>
+            <td class="num vol-cell">33.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:90.4%"></div></div>
+                <span class="pos-pct">90.4%</span>
+              </div>
+              
+            </td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2454</td>
+            <td>聯發科</td>
+            <td class="num">3,910.00</td>
+            <td class="num up">+0.77%</td>
+            <td class="num vol-cell">9.9M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:79.2%"></div></div>
+                <span class="pos-pct">79.2%</span>
+              </div>
+              
+            </td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2317</td>
+            <td>鴻海</td>
+            <td class="num">246.50</td>
+            <td class="num down">-0.80%</td>
+            <td class="num vol-cell">47.2M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:59.3%"></div></div>
+                <span class="pos-pct">59.3%</span>
+              </div>
+              
+            </td>
+            <td>AI 伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2345</td>
+            <td>智邦</td>
+            <td class="num">2,340.00</td>
+            <td class="num down">-1.68%</td>
+            <td class="num vol-cell">2.9M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:82.9%"></div></div>
+                <span class="pos-pct">82.9%</span>
+              </div>
+              
+            </td>
+            <td>網通</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2344</td>
+            <td>華邦電</td>
+            <td class="num">203.00</td>
+            <td class="num down">-1.69%</td>
+            <td class="num vol-cell">148.3M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:90.8%"></div></div>
+                <span class="pos-pct">90.8%</span>
+              </div>
+              
+            </td>
+            <td>記憶體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3036</td>
+            <td>文曄</td>
+            <td class="num">209.00</td>
+            <td class="num down">-3.02%</td>
+            <td class="num vol-cell">10.9M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:52.1%"></div></div>
+                <span class="pos-pct">52.1%</span>
+              </div>
+              
+            </td>
+            <td>IC 通路</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">8046</td>
+            <td>南電</td>
+            <td class="num">1,080.00</td>
+            <td class="num down">-4.00%</td>
+            <td class="num vol-cell">22.4M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:95.6%"></div></div>
+                <span class="pos-pct">95.6%</span>
+              </div>
+              
+            </td>
+            <td>PCB</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2881</td>
+            <td>富邦金</td>
+            <td class="num">128.50</td>
+            <td class="num down">-4.10%</td>
+            <td class="num vol-cell">30.6M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:83.4%"></div></div>
+                <span class="pos-pct">83.4%</span>
+              </div>
+              
+            </td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2882</td>
+            <td>國泰金</td>
+            <td class="num">98.00</td>
+            <td class="num down">-4.25%</td>
+            <td class="num vol-cell">48.0M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:74.4%"></div></div>
+                <span class="pos-pct">74.4%</span>
+              </div>
+              
+            </td>
+            <td>金融</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3008</td>
+            <td>大立光</td>
+            <td class="num">4,380.00</td>
+            <td class="num down">-7.20%</td>
+            <td class="num vol-cell">3.4M</td>
+            <td>
+              
+              <div class="pos-bar-wrap">
+                <div class="pos-bar"><div class="pos-bar-fill" style="width:74.6%"></div></div>
+                <span class="pos-pct">74.6%</span>
+              </div>
+              
+            </td>
+            <td>光學</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">4</span>總體市場 Macro</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>項目</th><th class="num">數值</th><th class="num">變動</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td>WTI 原油</td>
+            <td class="num">70.21</td>
+            <td class="num up">+1.42%</td>
+          </tr>
+          
+          <tr>
+            <td>Brent 原油</td>
+            <td class="num">73.47</td>
+            <td class="num up">+2.06%</td>
+          </tr>
+          
+          <tr>
+            <td>黃金</td>
+            <td class="num">4,005.60</td>
+            <td class="num down">-1.79%</td>
+          </tr>
+          
+          <tr>
+            <td>美元指數 DXY</td>
+            <td class="num">101.19</td>
+            <td class="num down">-0.17%</td>
+          </tr>
+          
+          <tr>
+            <td>加元/美元</td>
+            <td class="num">0.70</td>
+            <td class="num down">-0.23%</td>
+          </tr>
+          
+          <tr>
+            <td>台幣/美元 (TWD) <span style="font-size:10px;color:var(--text-muted);">(TWD per USD)</span></td>
+            <td class="num">31.86</td>
+            <td class="num up">+0.06%</td>
+          </tr>
+          
+          <tr>
+            <td>比特幣 BTC</td>
+            <td class="num">59,758.12</td>
+            <td class="num up">+0.38%</td>
+          </tr>
+          
+          <tr>
+            <td>VIX 恐慌指數</td>
+            <td class="num">17.65</td>
+            <td class="num down">-4.13%</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <p style="margin-top:12px;"><strong>🇺🇸 美股盤後：</strong>
+      Dow 52,182.74（<span class="up">+0.59%</span>）&nbsp;S&P 500 7,440.43（<span class="up">+1.18%</span>）&nbsp;Nasdaq 25,820.14（<span class="up">+2.07%</span>）&nbsp;
+    </p>
+    
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">5</span>今日結論</h2>
+    <div class="risk-box">
+      <h3>🚨 主要市場風險（5 項）</h3>
+      <ol><li>金融股內部表現分歧：台新金上漲 3.45% 表現強勢，但富邦金與國泰金分別下跌 4.10% 及 4.25%，顯示市場對金融類股的看法並不一致，可能引發資金在板塊內的輪動風險。</li><li>部分個股 RSI 過熱：台新金 RSI 達 79，南亞 RSI 更達 83，兩者均顯示技術面過熱，存在短線修正或獲利了結的壓力。</li><li>高價股大幅修正：大立光今日重挫 7.20%，南電下跌 4.00%，文曄下跌 3.02%，這些高價股的劇烈波動可能影響市場信心，並對相關供應鏈造成壓力。</li><li>航運股超賣風險：萬海 RSI 為 29，長榮海運 RSI 為 21，均處於超賣區間，儘管今日反彈，但若基本面未有顯著改善，仍存在進一步下探的風險。</li><li>國際原油價格波動：WTI 原油上漲 1.42%，Brent 原油上漲 2.06%，雖然有利於塑化類股，但若油價持續上漲，可能推升通膨壓力，進而影響全球經濟復甦及股市表現。</li></ol>
+    </div>
+    <div class="watch-box">
+      <h3>👀 今日觀察重點（5 項）</h3>
+      <ul><li>電子權值股能否延續動能：瑞昱、台達電、聯詠等電子股今日表現強勁，需觀察其能否在明日持續站穩 20/60 日均線上方，並帶動整體大盤。</li><li>金融股分歧走勢的後續影響：關注富邦金與國泰金在今日大幅下跌後，明日能否止穩，以及台新金在 52 週高點 100.0% 位置能否維持強勢。</li><li>塑化類股的續航力：在原油價格上漲的支撐下，台塑化、南亞、台塑等塑化股今日表現亮眼，需觀察其能否在明日繼續維持漲勢。</li><li>航運股超賣反彈的持續性：萬海與長榮海運在 RSI 超賣區間反彈，需觀察其反彈力道是否能持續，並留意其 52 週位置仍處低檔的潛在壓力。</li><li>美股漲勢的傳導效應：道瓊指數上漲 0.59%，標普 500 指數上漲 1.18%，那斯達克指數上漲 2.07%，觀察美股的強勁表現能否在今日開盤後持續激勵台股。</li></ul>
+    </div>
+    <div class="suggest-box">
+      <h3>💡 簡短建議</h3>
+      <p>考量今日台股上漲 0.96% 至 44,999.90 點，主要由半導體、電子零組件、金融及塑化類股驅動，但部分權值股出現大幅修正且金融股內部表現分歧。建議投資人應採取區間操作策略，並著重個股基本面與技術面分析。對於技術面過熱（RSI 79 或 83）的個股如台新金、南亞，應留意獲利了結壓力；對於技術面超賣（RSI 29 或 21）的個股如萬海、長榮海運，可觀察是否出現止穩訊號。整體而言，市場仍存在結構性機會，但需謹慎選股並控制風險。</p>
+    </div>
+  </section>
+  
+
+
+
+  
+  
+  <section>
+    <h2><span class="num">6</span>技術面訊號雷達</h2>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">基於 RSI(14)、20/60 日均線、成交量倍數自動偵測，僅供參考，非投資建議。</p>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">瑞昱 <span class="ticker">2379</span></span>
+        <span class="num up" style="font-size:13px;">783.00 (+5.81%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 65</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">台新金 <span class="ticker">2887</span></span>
+        <span class="num up" style="font-size:13px;">33.00 (+3.45%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 79 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 79</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">台塑化 <span class="ticker">6505</span></span>
+        <span class="num up" style="font-size:13px;">55.30 (+3.36%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 63</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">聯詠 <span class="ticker">3034</span></span>
+        <span class="num up" style="font-size:13px;">523.00 (+2.75%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 62</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">萬海 <span class="ticker">2615</span></span>
+        <span class="num up" style="font-size:13px;">78.60 (+2.48%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 RSI 29 超賣</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 28</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">南亞 <span class="ticker">1303</span></span>
+        <span class="num up" style="font-size:13px;">151.50 (+2.36%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 83 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 82</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">台塑 <span class="ticker">1301</span></span>
+        <span class="num up" style="font-size:13px;">52.70 (+1.92%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 62</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">長榮海運 <span class="ticker">2603</span></span>
+        <span class="num up" style="font-size:13px;">184.00 (+1.66%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 RSI 21 超賣</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 20</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">統一 <span class="ticker">1216</span></span>
+        <span class="num up" style="font-size:13px;">75.70 (+1.47%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 63</span>
+      </div>
+    </div>
+    
+    
+    <div class="suggest-box" style="margin-top:12px;">
+      <h3>📡 訊號解讀</h3>
+      <p>瑞昱 (2379.TW)、台塑化 (6505.TW)、聯詠 (3034.TW)、台塑 (1301.TW) 及統一 (1216.TW) 的 RSI 介於 62 至 65 之間，且均站穩 20/60 日均線上方，顯示技術面偏多。然而，台新金 (2887.TW) 的 RSI 達 79，南亞 (1303.TW) 的 RSI 更達 83，兩者均呈現過熱訊號。相對地，萬海 (2615.TW) 的 RSI 為 29，長榮海運 (2603.TW) 的 RSI 為 21，均處於超賣區間。</p>
+    </div>
+    
+  </section>
+  
+
+  
+  
+
+  
+  <section>
+    <h2><span class="num">8</span>資料來源</h2>
+    <div class="sources">
+      <a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a>
+      <a href="https://www.twse.com.tw" target="_blank">證交所 TWSE</a>
+      <a href="https://openapi.twse.com.tw" target="_blank">TWSE Open API</a>
+      
+      <a href="https://www.investing.com" target="_blank">Investing.com</a>
+    </div>
+    <p class="notice">⚠ 數據來自 yfinance 自動抓取與 TWSE Open API，分析文字由 Gemini AI 生成。本報告僅供個人參考，非投資建議。資料截至 2026/06/29 收盤。</p>
+  </section>
+
+
+  
+  <div style="margin-top:20px;padding:16px;background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:12px;">
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.7;margin:0;">
+      <strong style="color:var(--red);">⚠ 免責聲明 Disclaimer</strong><br>
+      本報告內容由自動化程式抓取公開市場數據，分析文字由 AI（Google Gemini）生成，僅供個人學習與資訊參考之用，<strong>不構成任何形式之投資建議、證券分析或買賣推薦</strong>。<br><br>
+      本站作者不具備任何國家或地區之證券投資顧問資格（包括但不限於加拿大 BCSC 註冊顧問資格、台灣金管會核准之投資顧問業務資格）。所有技術指標（RSI、均線、成交量等）僅為客觀數據呈現，不代表任何買賣時機之判斷。<br><br>
+      投資有風險，過去績效不代表未來表現。讀者應自行研究並諮詢合格之專業財務顧問後再做出任何投資決策。對於因參考本報告內容所導致之任何損失，本站不承擔任何責任。<br><br>
+      <em>This report is auto-generated for informational purposes only and does not constitute investment advice. The author is not a licensed financial advisor in any jurisdiction. All investment decisions should be made after consulting qualified professionals. Past performance does not guarantee future results.</em>
+    </p>
+  </div>
+
+  <footer>
+    Auto-generated · 2026/06/30 · GitHub Actions + Gemini AI · Full edition
+  </footer>
+
+</div>
+</body>
+</html>
