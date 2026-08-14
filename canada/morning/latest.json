@@ -6,17 +6,17 @@
   "data_ref": "2026/08/13",
   "taiex": {
     "ticker": "^TWII",
-    "price": 45811.01171875,
-    "change": -210.46875,
-    "change_pct": -0.4573272042886903,
-    "volume": 0
+    "price": 46021.48046875,
+    "change": 503.41015625,
+    "change_pct": 1.1059567173957183,
+    "volume": 5570900
   },
   "tsx": {
     "ticker": "^GSPTSE",
-    "price": 36649.109375,
-    "change": -110.19140625,
-    "change_pct": -0.2997646960309046,
-    "volume": 50826356
+    "price": 36703.01171875,
+    "change": -56.2890625,
+    "change_pct": -0.1531287627992958,
+    "volume": 58484575
   },
   "filename": "daily-financial-brief-2026-08-14.html",
   "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/morning/daily-financial-brief-2026-08-14.html"
