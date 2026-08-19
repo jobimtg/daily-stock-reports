@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股收盤報告 — 2026/08/19</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-start:#1a1a2e; --bg-mid:#16213e; --bg-end:#0f3460;
+  --card-bg:rgba(255,255,255,0.06); --card-border:rgba(255,255,255,0.08);
+  --text:#fff; --text-dim:#a8b2d1; --text-muted:#6e7891;
+  --accent:#64ffda; --red:#ff6b6b; --green:#51cf66; --orange:#ffa94d;
+  --note-bg:rgba(100,255,218,0.06);
+}
+html,body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;
+  background:linear-gradient(135deg,var(--bg-start) 0%,var(--bg-mid) 50%,var(--bg-end) 100%);
+  min-height:100vh; color:var(--text); -webkit-font-smoothing:antialiased; line-height:1.6;
+}
+.container{max-width:920px;margin:0 auto;padding:24px 16px 60px;}
+header{text-align:center;padding:28px 0 20px;}
+.back-link{display:inline-block;color:var(--text-dim);text-decoration:none;font-size:13px;margin-bottom:16px;}
+.back-link:hover{color:var(--accent);}
+h1{font-size:26px;font-weight:700;letter-spacing:-0.3px;margin-bottom:4px;}
+.report-date{color:var(--text-dim);font-size:14px;margin-bottom:6px;}
+
+/* Data reference notice banner */
+.data-ref-banner{
+  background:rgba(255,169,77,0.10);border:1px solid rgba(255,169,77,0.25);
+  border-radius:10px;padding:10px 16px;margin:0 0 16px;
+  font-size:12px;color:var(--orange);text-align:center;
+}
+.data-ref-banner strong{color:var(--orange);}
+
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0;}
+.sum-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:16px;backdrop-filter:blur(10px);}
+.sum-card .label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.sum-card .value{font-size:22px;font-weight:700;}
+.sum-card .change{font-size:13px;font-weight:600;margin-top:4px;}
+.up{color:var(--green);} .down{color:var(--red);} .flat{color:var(--text-dim);}
+.arrow-cell{text-align:center;font-size:16px;font-weight:700;}
+section{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-bottom:16px;backdrop-filter:blur(10px);}
+section h2{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--card-border);}
+section h2 .num{background:var(--accent);color:#0f3460;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+section p{color:var(--text-dim);font-size:14px;margin-bottom:8px;}
+section p strong{color:var(--text);}
+section ul{padding-left:20px;color:var(--text-dim);font-size:14px;}
+section ul li{margin-bottom:5px;}
+section ul li strong{color:var(--text);}
+.subheading{color:var(--accent);font-size:13px;font-weight:600;margin:14px 0 6px;padding:4px 10px;background:rgba(100,255,218,0.06);border-radius:6px;display:inline-block;}
+.table-wrap{overflow-x:auto;margin:6px -4px;-webkit-overflow-scrolling:touch;}
+table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px;}
+thead th{background:rgba(100,255,218,0.08);color:var(--accent);font-weight:600;padding:9px 10px;text-align:left;font-size:12px;letter-spacing:0.3px;border-bottom:1px solid var(--card-border);}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--card-border);color:var(--text-dim);}
+tbody td:first-child{color:var(--text);font-weight:600;}
+tbody tr:hover{background:rgba(255,255,255,0.03);}
+tbody tr:last-child td{border-bottom:none;}
+td.num{text-align:right;font-variant-numeric:tabular-nums;}
+.ticker{color:var(--accent)!important;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;}
+.vol-cell{color:var(--text-muted);font-size:12px;}
+.pos-bar-wrap{display:flex;align-items:center;gap:6px;min-width:80px;}
+.pos-bar{height:5px;background:rgba(255,255,255,0.1);border-radius:3px;flex:1;overflow:hidden;}
+.pos-bar-fill{height:100%;background:var(--accent);border-radius:3px;}
+.pos-pct{font-size:10px;color:var(--text-muted);white-space:nowrap;}
+
+/* Institutional & margin cards */
+.inst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;}
+.inst-card{background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;text-align:center;}
+.inst-card .inst-label{font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+.inst-card .inst-val{font-size:16px;font-weight:700;}
+.margin-row{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0;font-size:13px;color:var(--text-dim);}
+.margin-row span strong{color:var(--text);}
+
+.risk-box{background:rgba(255,107,107,0.08);border-left:3px solid var(--red);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.watch-box{background:rgba(255,169,77,0.08);border-left:3px solid var(--orange);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.suggest-box{background:rgba(100,255,218,0.08);border-left:3px solid var(--accent);padding:12px 14px;border-radius:6px;margin-top:10px;}
+.risk-box h3,.watch-box h3,.suggest-box h3{font-size:13px;font-weight:700;margin-bottom:6px;}
+.risk-box h3{color:var(--red);} .watch-box h3{color:var(--orange);} .suggest-box h3{color:var(--accent);}
+.risk-box ol,.watch-box ul{margin-left:18px;color:var(--text-dim);font-size:13px;}
+.risk-box ol li,.watch-box ul li{margin-bottom:5px;}
+.suggest-box p{font-size:13px;color:var(--text);margin:0;}
+.sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.sources a{background:rgba(100,255,218,0.08);color:var(--accent);padding:6px 12px;border-radius:20px;font-size:12px;text-decoration:none;border:1px solid rgba(100,255,218,0.2);}
+.sources a:hover{background:rgba(100,255,218,0.15);}
+.notice{font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;}
+footer{text-align:center;margin-top:24px;padding:16px 0;color:var(--text-muted);font-size:11px;border-top:1px solid var(--card-border);}
+@media(max-width:600px){
+  .inst-grid{grid-template-columns:1fr 1fr;}
+  h1{font-size:22px;} .sum-card .value{font-size:18px;} section{padding:16px;} section h2{font-size:15px;} table{font-size:12px;} thead th,tbody td{padding:7px 8px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <a href="/daily-stock-reports/index.html" class="back-link">← 回首頁</a>
+    <h1>📊 台股收盤報告</h1>
+    <div class="report-date">2026/08/19（週三）· Taipei, TW</div>
+    <div style="margin-top:6px;"><span style="background:rgba(100,255,218,0.15);color:var(--accent);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">📊 收盤總結</span></div>
+  </header>
+
+  
+  <div class="data-ref-banner">
+    📋 本報告資料截至 <strong>2026/08/19（週三）收盤</strong>，供 2026/08/19 今日收盤後回顧與明日盤前參考。即時數據請以交易所為準。
+  </div>
+
+  
+  <div class="summary">
+    
+    <div class="sum-card">
+      <div class="label">🇹🇼 TAIEX 加權指數</div>
+      <div class="value">44,719.35</div>
+      <div class="change down">▼ -589.33 (-1.30%)</div>
+    </div>
+  </div>
+
+  
+  
+
+  
+  <section>
+    <h2><span class="num">1</span>台灣股市 TAIEX</h2>
+    <p>今日台股大盤加權指數收在 44,719.35 點，下跌 -1.30%，主要受大型科技權值股普遍走弱拖累，如台積電下跌 -0.83%、聯發科下跌 -4.07%。盤面上航運類股表現相對強勢，部分中小型股則呈現劇烈震盪。</p>
+    <p><strong>走勢重點：</strong></p>
+    <ul><li>大型科技權值股普遍承壓：台積電下跌 -0.83% 收 2,380.00 元，廣達下跌 -1.95% 收 327.00 元，鴻海下跌 -2.35% 收 249.00 元，聯發科下跌 -4.07% 收 3,885.00 元，世芯-KY 下跌 -8.50% 收 3,715.00 元，顯示市場對科技股的獲利了結壓力顯著。</li><li>航運類股逆勢走強：益航 (2601.TW) 上漲 +10.00% 收 6.82 元，成交量 4.9M；四維航 (5608.TW) 上漲 +10.00% 收 15.95 元，成交量 14.6M，兩者均呈現漲停，且成交量顯著放大，顯示資金轉向傳產航運。</li><li>部分中小型股表現亮眼：大量 (3167.TW) 上漲 +10.00% 收 770.00 元，雲豹能源 (6869.TW) 上漲 +9.92% 收 69.80 元，光鼎 (6226.TW) 上漲 +9.90% 收 21.10 元，長華* (8070.TW) 上漲 +9.90% 收 54.40 元，旭隼 (6409.TW) 上漲 +8.34% 收 1,065.00 元，顯示部分個股仍有特定買盤支撐。</li><li>多檔中小型股跌幅劇烈：宏致 (3605.TW) 下跌 -7.98% 收 121.00 元，訊芯-KY (6451.TW) 下跌 -8.18% 收 421.00 元，鼎元 (2426.TW) 下跌 -8.33% 收 67.10 元，晶豪科 (3006.TW) 下跌 -9.16% 收 248.00 元，暉盛-創 (7730.TW) 下跌 -9.25% 收 157.00 元，顯示市場對部分中小型股的信心不足。</li><li>成交量集中於大型權值股與部分中小型股：鴻海成交量達 50.5M，台積電成交量 20.0M，聯發科成交量 9.3M，而凌巨 (8105.TW) 雖下跌 -8.61%，成交量仍達 48.2M，鼎元 (2426.TW) 下跌 -8.33%，成交量達 21.8M，顯示市場交投熱絡但方向分歧。</li></ul>
+
+    
+    
+
+    
+    
+    <p style="margin-top:12px;"><strong>📊 融資融券餘額</strong></p>
+    <div class="margin-row">
+      <span>融資餘額: <strong>0 千股</strong>
+        <span class="up">(—)</span>
+      </span>
+      <span>融券餘額: <strong>0 千股</strong>
+        <span class="up">(—)</span>
+      </span>
+    </div>
+    
+
+    
+    
+    <p style="margin-top:12px;"><strong>📊 市場廣度（漲跌家數）</strong></p>
+    <div style="display:flex;gap:16px;margin:8px 0;font-size:14px;">
+      <span class="up">▲ 上漲 — 家</span>
+      <span class="down">▼ 下跌 — 家</span>
+      <span class="flat">→ 持平 — 家</span>
+    </div>
+    
+    
+  </section>
+
+  
+  
+  <section>
+    <h2><span class="num">2</span>ETF 每日精選</h2>
+    <p>依今日市場走勢輪動挑選，每日非核心標的自動更換避免重複。</p>
+
+    
+    <div class="subheading">🇹🇼 台灣 ETF（每日動態輪動 · 25 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價</th><th class="num">漲跌幅</th><th class="num">成交量</th><th class="num">規模</th><th class="num">配息率</th><th>類型</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">00715L</td>
+            <td>期街口布蘭特正2</td>
+            <td class="num">50.80</td>
+            <td class="num up">+7.24%</td>
+            <td class="num vol-cell">6.8M</td>
+            <td class="num vol-cell">51億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00642U</td>
+            <td>期元大S&P石油</td>
+            <td class="num">28.10</td>
+            <td class="num up">+3.69%</td>
+            <td class="num vol-cell">2.7M</td>
+            <td class="num vol-cell">25億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00693U</td>
+            <td>期街口S&P黃豆</td>
+            <td class="num">22.32</td>
+            <td class="num up">+2.67%</td>
+            <td class="num vol-cell">729K</td>
+            <td class="num vol-cell">17億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00960</td>
+            <td>野村全球航運龍頭</td>
+            <td class="num">20.73</td>
+            <td class="num up">+2.52%</td>
+            <td class="num vol-cell">1.1M</td>
+            <td class="num vol-cell">11億</td>
+            <td class="num up">4.6%</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00878</td>
+            <td>國泰永續高股息</td>
+            <td class="num">32.38</td>
+            <td class="num up">+0.00%</td>
+            <td class="num vol-cell">87.7M</td>
+            <td class="num vol-cell">5942億</td>
+            <td class="num up">5.8%</td>
+            <td>ESG 高息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">0056</td>
+            <td>元大高股息</td>
+            <td class="num">52.70</td>
+            <td class="num down">-0.57%</td>
+            <td class="num vol-cell">30.9M</td>
+            <td class="num vol-cell">7035億</td>
+            <td class="num up">8.3%</td>
+            <td>高股息</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">0050</td>
+            <td>元大台灣50</td>
+            <td class="num">104.90</td>
+            <td class="num down">-1.46%</td>
+            <td class="num vol-cell">66.5M</td>
+            <td class="num vol-cell">2.3兆</td>
+            <td class="num up">1.6%</td>
+            <td>大盤</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">009802</td>
+            <td>富邦旗艦50</td>
+            <td class="num">18.98</td>
+            <td class="num down">-2.47%</td>
+            <td class="num vol-cell">2.0M</td>
+            <td class="num vol-cell">94億</td>
+            <td class="num up">2.8%</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00994A</td>
+            <td>主動第一金台股優</td>
+            <td class="num">17.30</td>
+            <td class="num down">-2.48%</td>
+            <td class="num vol-cell">3.3M</td>
+            <td class="num vol-cell">45億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00995A</td>
+            <td>主動中信台灣卓越</td>
+            <td class="num">17.22</td>
+            <td class="num down">-2.49%</td>
+            <td class="num vol-cell">3.2M</td>
+            <td class="num vol-cell">48億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00763U</td>
+            <td>期街口道瓊銅</td>
+            <td class="num">34.86</td>
+            <td class="num down">-2.52%</td>
+            <td class="num vol-cell">406K</td>
+            <td class="num vol-cell">15億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00935</td>
+            <td>野村臺灣新科技50</td>
+            <td class="num">56.85</td>
+            <td class="num down">-2.57%</td>
+            <td class="num vol-cell">6.7M</td>
+            <td class="num vol-cell">460億</td>
+            <td class="num up">3.7%</td>
+            <td>科技</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00981A</td>
+            <td>主動統一台股增長</td>
+            <td class="num">29.61</td>
+            <td class="num down">-2.57%</td>
+            <td class="num vol-cell">217.1M</td>
+            <td class="num vol-cell">2880億</td>
+            <td class="num up">4.0%</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00987A</td>
+            <td>主動台新優勢成長</td>
+            <td class="num">16.09</td>
+            <td class="num down">-2.60%</td>
+            <td class="num vol-cell">2.4M</td>
+            <td class="num vol-cell">24億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00982T</td>
+            <td>平衡兆豐台美動能</td>
+            <td class="num">15.00</td>
+            <td class="num down">-2.72%</td>
+            <td class="num vol-cell">25K</td>
+            <td class="num vol-cell">3億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00875</td>
+            <td>國泰網路資安</td>
+            <td class="num">55.10</td>
+            <td class="num down">-2.91%</td>
+            <td class="num vol-cell">752K</td>
+            <td class="num vol-cell">7億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00631L</td>
+            <td>元大台灣50正2</td>
+            <td class="num">34.81</td>
+            <td class="num down">-3.17%</td>
+            <td class="num vol-cell">167.9M</td>
+            <td class="num vol-cell">2648億</td>
+            <td class="num ">—</td>
+            <td>槓桿</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00947</td>
+            <td>台新臺灣IC設計</td>
+            <td class="num">36.48</td>
+            <td class="num down">-3.34%</td>
+            <td class="num vol-cell">9.8M</td>
+            <td class="num vol-cell">94億</td>
+            <td class="num up">2.0%</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00675L</td>
+            <td>富邦臺灣加權正2</td>
+            <td class="num">303.40</td>
+            <td class="num down">-3.35%</td>
+            <td class="num vol-cell">1.6M</td>
+            <td class="num vol-cell">330億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00685L</td>
+            <td>群益臺灣加權正2</td>
+            <td class="num">11.44</td>
+            <td class="num down">-3.38%</td>
+            <td class="num vol-cell">215.8M</td>
+            <td class="num vol-cell">733億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00996A</td>
+            <td>主動兆豐台灣豐收</td>
+            <td class="num">13.90</td>
+            <td class="num down">-3.41%</td>
+            <td class="num vol-cell">6.0M</td>
+            <td class="num vol-cell">39億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00951</td>
+            <td>台新日本半導體</td>
+            <td class="num">18.01</td>
+            <td class="num down">-3.54%</td>
+            <td class="num vol-cell">2.3M</td>
+            <td class="num vol-cell">38億</td>
+            <td class="num up">0.9%</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00663L</td>
+            <td>國泰臺灣加權正2</td>
+            <td class="num">100.10</td>
+            <td class="num down">-3.56%</td>
+            <td class="num vol-cell">6.0M</td>
+            <td class="num vol-cell">166億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00954</td>
+            <td>中信日本半導體</td>
+            <td class="num">19.14</td>
+            <td class="num down">-3.58%</td>
+            <td class="num vol-cell">1.7M</td>
+            <td class="num vol-cell">22億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">00673R</td>
+            <td>期元大S&P原油反1</td>
+            <td class="num">12.32</td>
+            <td class="num down">-3.75%</td>
+            <td class="num vol-cell">22.5M</td>
+            <td class="num vol-cell">70億</td>
+            <td class="num ">—</td>
+            <td>其他</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">3</span>台股重點股</h2>
+
+    
+
+    <div class="subheading">🇹🇼 TAIEX（依漲跌幅 · 25 檔）</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>名稱</th><th class="num">收盤價(TWD)</th><th class="num">漲跌幅</th><th class="num">成交量</th><th>52週位置</th><th>產業</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">2601</td>
+            <td>益航</td>
+            <td class="num">6.82</td>
+            <td class="num up">+10.00%</td>
+            <td class="num vol-cell">4.9M</td>
+            <td>
+              —
+            </td>
+            <td>航運</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3167</td>
+            <td>大量</td>
+            <td class="num">770.00</td>
+            <td class="num up">+10.00%</td>
+            <td class="num vol-cell">5.9M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">5608</td>
+            <td>四維航</td>
+            <td class="num">15.95</td>
+            <td class="num up">+10.00%</td>
+            <td class="num vol-cell">14.6M</td>
+            <td>
+              —
+            </td>
+            <td>航運</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6869</td>
+            <td>雲豹能源</td>
+            <td class="num">69.80</td>
+            <td class="num up">+9.92%</td>
+            <td class="num vol-cell">1.0M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6226</td>
+            <td>光鼎</td>
+            <td class="num">21.10</td>
+            <td class="num up">+9.90%</td>
+            <td class="num vol-cell">15.6M</td>
+            <td>
+              —
+            </td>
+            <td>電子</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">8070</td>
+            <td>長華*</td>
+            <td class="num">54.40</td>
+            <td class="num up">+9.90%</td>
+            <td class="num vol-cell">13.0M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6409</td>
+            <td>旭隼</td>
+            <td class="num">1,065.00</td>
+            <td class="num up">+8.34%</td>
+            <td class="num vol-cell">1.2M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2330</td>
+            <td>台積電</td>
+            <td class="num">2,380.00</td>
+            <td class="num down">-0.83%</td>
+            <td class="num vol-cell">20.0M</td>
+            <td>
+              —
+            </td>
+            <td>半導體</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2382</td>
+            <td>廣達</td>
+            <td class="num">327.00</td>
+            <td class="num down">-1.95%</td>
+            <td class="num vol-cell">15.4M</td>
+            <td>
+              —
+            </td>
+            <td>伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2317</td>
+            <td>鴻海</td>
+            <td class="num">249.00</td>
+            <td class="num down">-2.35%</td>
+            <td class="num vol-cell">50.5M</td>
+            <td>
+              —
+            </td>
+            <td>AI 伺服器</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2308</td>
+            <td>台達電</td>
+            <td class="num">1,820.00</td>
+            <td class="num down">-3.45%</td>
+            <td class="num vol-cell">11.4M</td>
+            <td>
+              —
+            </td>
+            <td>電源/AI</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2454</td>
+            <td>聯發科</td>
+            <td class="num">3,885.00</td>
+            <td class="num down">-4.07%</td>
+            <td class="num vol-cell">9.3M</td>
+            <td>
+              —
+            </td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3605</td>
+            <td>宏致</td>
+            <td class="num">121.00</td>
+            <td class="num down">-7.98%</td>
+            <td class="num vol-cell">11.8M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2923</td>
+            <td>鼎固-KY</td>
+            <td class="num">23.90</td>
+            <td class="num down">-8.08%</td>
+            <td class="num vol-cell">316K</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6451</td>
+            <td>訊芯-KY</td>
+            <td class="num">421.00</td>
+            <td class="num down">-8.18%</td>
+            <td class="num vol-cell">6.4M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">8101</td>
+            <td>華冠</td>
+            <td class="num">10.00</td>
+            <td class="num down">-8.26%</td>
+            <td class="num vol-cell">37K</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2426</td>
+            <td>鼎元</td>
+            <td class="num">67.10</td>
+            <td class="num down">-8.33%</td>
+            <td class="num vol-cell">21.8M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">4764</td>
+            <td>雙鍵</td>
+            <td class="num">206.00</td>
+            <td class="num down">-8.44%</td>
+            <td class="num vol-cell">1.9M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3661</td>
+            <td>世芯-KY</td>
+            <td class="num">3,715.00</td>
+            <td class="num down">-8.50%</td>
+            <td class="num vol-cell">4.0M</td>
+            <td>
+              —
+            </td>
+            <td>IC 設計</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">8105</td>
+            <td>凌巨</td>
+            <td class="num">13.80</td>
+            <td class="num down">-8.61%</td>
+            <td class="num vol-cell">48.2M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2388</td>
+            <td>威盛</td>
+            <td class="num">72.40</td>
+            <td class="num down">-8.70%</td>
+            <td class="num vol-cell">6.2M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3042</td>
+            <td>晶技</td>
+            <td class="num">178.50</td>
+            <td class="num down">-8.70%</td>
+            <td class="num vol-cell">23.9M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3712</td>
+            <td>永崴投控</td>
+            <td class="num">20.40</td>
+            <td class="num down">-8.72%</td>
+            <td class="num vol-cell">1.1M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">3006</td>
+            <td>晶豪科</td>
+            <td class="num">248.00</td>
+            <td class="num down">-9.16%</td>
+            <td class="num vol-cell">15.8M</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">7730</td>
+            <td>暉盛-創</td>
+            <td class="num">157.00</td>
+            <td class="num down">-9.25%</td>
+            <td class="num vol-cell">72K</td>
+            <td>
+              —
+            </td>
+            <td>其他</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">4</span>總體市場 Macro</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>項目</th><th class="num">數值</th><th class="num">變動</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td>WTI 原油</td>
+            <td class="num">84.63</td>
+            <td class="num down">-0.36%</td>
+          </tr>
+          
+          <tr>
+            <td>Brent 原油</td>
+            <td class="num">91.50</td>
+            <td class="num up">+0.53%</td>
+          </tr>
+          
+          <tr>
+            <td>黃金</td>
+            <td class="num">4,398.30</td>
+            <td class="num up">+0.74%</td>
+          </tr>
+          
+          <tr>
+            <td>美元指數 DXY</td>
+            <td class="num">99.47</td>
+            <td class="num down">-0.18%</td>
+          </tr>
+          
+          <tr>
+            <td>加元/美元</td>
+            <td class="num">0.72</td>
+            <td class="num down">-0.05%</td>
+          </tr>
+          
+          <tr>
+            <td>台幣/美元 (TWD) <span style="font-size:10px;color:var(--text-muted);">(TWD per USD)</span></td>
+            <td class="num">31.91</td>
+            <td class="num up">+0.20%</td>
+          </tr>
+          
+          <tr>
+            <td>比特幣 BTC</td>
+            <td class="num">64,285.92</td>
+            <td class="num down">-0.34%</td>
+          </tr>
+          
+          <tr>
+            <td>VIX 恐慌指數</td>
+            <td class="num">15.84</td>
+            <td class="num up">+4.28%</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <p style="margin-top:12px;"><strong>🇺🇸 美股盤後：</strong>
+      Dow 53,343.40（<span class="down">-0.22%</span>）&nbsp;S&P 500 7,691.76（<span class="down">-0.69%</span>）&nbsp;Nasdaq 26,289.71（<span class="down">-1.33%</span>）&nbsp;
+    </p>
+    
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">5</span>今日結論</h2>
+    <div class="risk-box">
+      <h3>🚨 主要市場風險（5 項）</h3>
+      <ol><li>全球科技股賣壓延續：那斯達克指數今日下跌 -1.33%，S&P 500 指數下跌 -0.69%，顯示全球科技股面臨修正壓力，今日台股大型權值股如台積電下跌 -0.83%、聯發科下跌 -4.07% 即為印證。</li><li>VIX恐慌指數上升：VIX 恐慌指數今日上漲 +4.28% 至 15.84，反映市場避險情緒升溫，可能導致資金從風險性資產撤離，增加市場波動性。</li><li>台幣貶值壓力：台幣/美元今日上漲 +0.20% 至 31.91，顯示台幣相對美元走弱，可能影響外資對台股的投資意願，並增加資金外流風險。</li><li>權值股表現疲弱：台積電、廣達、鴻海、聯發科等主要權值股今日普遍下跌，拖累大盤表現，顯示市場缺乏領漲動能，短期內大盤上攻動能受限。</li><li>部分個股過熱修正：技術面顯示廣達 RSI 83 過熱，宏致 RSI 80 過熱，今日分別下跌 -1.95% 和 -7.98%，顯示前期漲多個股面臨獲利了結賣壓，短期內仍有修正風險。</li></ol>
+    </div>
+    <div class="watch-box">
+      <h3>👀 今日觀察重點（5 項）</h3>
+      <ul><li>國際股市走勢：密切關注美股道瓊、S&P 500、那斯達克明日開盤表現，今日分別下跌 -0.22%、-0.69%、-1.33%，其後續走勢將影響台股明日開盤情緒與資金流向。</li><li>大型權值股止跌訊號：觀察台積電、聯發科等大型權值股明日能否止跌回穩，今日台積電下跌 -0.83%，聯發科下跌 -4.07%，其表現將是大盤能否反彈的關鍵指標。</li><li>航運股動能延續性：益航、四維航今日漲停 +10.00%，成交量分別為均量 4.6 倍與 9.7 倍，且 RSI 已達 75 及 92 過熱區間，需觀察其上漲動能能否延續，或是否面臨技術性修正。</li><li>資金流向變化：留意資金是否從科技股轉向其他非科技類股，今日科技股普遍下跌，而部分傳產如航運股表現強勁，顯示資金輪動跡象，需觀察此趨勢是否持續。</li><li>技術面超賣個股反彈：鼎固-KY RSI 11 顯示超賣，今日下跌 -8.08%，觀察明日是否有技術性反彈機會，但仍需注意整體市場風險與個股基本面狀況。</li></ul>
+    </div>
+    <div class="suggest-box">
+      <h3>💡 簡短建議</h3>
+      <p>鑑於今日大盤下跌 -1.30%，且主要權值股普遍走弱，市場情緒偏向保守。建議投資人審慎評估持股，對於前期漲幅較大且技術面過熱的個股，如廣達 (RSI 83) 和宏致 (RSI 80)，應留意獲利了結風險。同時，可關注今日表現強勢但 RSI 已過熱的航運股 (益航 RSI 75, 四維航 RSI 92) 的後續動能。對於超賣個股如鼎固-KY (RSI 11)，可觀察是否有技術性反彈機會，但仍需注意整體市場風險。</p>
+    </div>
+  </section>
+  
+
+
+
+  
+  
+  <section>
+    <h2><span class="num">6</span>技術面訊號雷達</h2>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">基於 RSI(14)、20/60 日均線、成交量倍數自動偵測，僅供參考，非投資建議。</p>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">益航 <span class="ticker">2601</span></span>
+        <span class="num up" style="font-size:13px;">6.82 (+10.00%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 75 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟡 成交量為均量 4.6 倍</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 75</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">大量 <span class="ticker">3167</span></span>
+        <span class="num up" style="font-size:13px;">770.00 (+10.00%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 73 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟡 成交量為均量 4.6 倍</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 73</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">四維航 <span class="ticker">5608</span></span>
+        <span class="num up" style="font-size:13px;">15.95 (+10.00%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 92 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟡 成交量為均量 9.7 倍</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 91</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">雲豹能源 <span class="ticker">6869</span></span>
+        <span class="num up" style="font-size:13px;">69.80 (+9.92%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟡 成交量為均量 2.8 倍</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 54</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">光鼎 <span class="ticker">6226</span></span>
+        <span class="num up" style="font-size:13px;">21.10 (+9.90%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟡 成交量為均量 3.0 倍</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 54</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">長華* <span class="ticker">8070</span></span>
+        <span class="num up" style="font-size:13px;">54.40 (+9.90%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 77 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟡 成交量為均量 5.5 倍</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 77</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">旭隼 <span class="ticker">6409</span></span>
+        <span class="num up" style="font-size:13px;">1,065.00 (+8.34%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 65</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">廣達 <span class="ticker">2382</span></span>
+        <span class="num down" style="font-size:13px;">327.00 (-1.95%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 83 過熱</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 83</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">宏致 <span class="ticker">3605</span></span>
+        <span class="num down" style="font-size:13px;">121.00 (-7.98%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🔴 RSI 80 過熱</span>
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 站穩 20/60 日均線上方</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 80</span>
+      </div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:600;">鼎固-KY <span class="ticker">2923</span></span>
+        <span class="num down" style="font-size:13px;">23.90 (-8.08%)</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        
+        <span style="background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:15px;font-size:12px;">🟢 RSI 11 超賣</span>
+        
+        <span style="padding:3px 10px;font-size:11px;color:var(--text-muted);">RSI 10</span>
+      </div>
+    </div>
+    
+    
+    <div class="suggest-box" style="margin-top:12px;">
+      <h3>📡 訊號解讀</h3>
+      <p>今日技術面顯示，多檔個股呈現過熱訊號，如四維航 RSI 92、長華* RSI 77、廣達 RSI 83、宏致 RSI 80。部分個股如益航、四維航、光鼎、旭隼站穩 20/60 日均線上方，其中益航成交量為均量 4.6 倍，四維航成交量為均量 9.7 倍，顯示資金追捧。相對地，鼎固-KY RSI 11 呈現超賣訊號。</p>
+    </div>
+    
+  </section>
+  
+
+  
+  
+  <section>
+    <h2><span class="num">7</span>近期 IPO 追蹤</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>代號</th><th>公司名稱</th><th>上市日期</th><th>產業</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="ticker">7855</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">2237</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">7689</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">7835</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">6947</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">5236</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">7827</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">4582</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">7803</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td class="ticker">7818</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </section>
+  
+
+  
+  <section>
+    <h2><span class="num">8</span>資料來源</h2>
+    <div class="sources">
+      <a href="https://finance.yahoo.com" target="_blank">Yahoo Finance</a>
+      <a href="https://www.twse.com.tw" target="_blank">證交所 TWSE</a>
+      <a href="https://openapi.twse.com.tw" target="_blank">TWSE Open API</a>
+      
+      <a href="https://www.investing.com" target="_blank">Investing.com</a>
+    </div>
+    <p class="notice">⚠ 數據來自 yfinance 自動抓取與 TWSE Open API，分析文字由 Gemini AI 生成。本報告僅供個人參考，非投資建議。資料截至 2026/08/19 收盤。</p>
+  </section>
+
+
+  
+  <div style="margin-top:20px;padding:16px;background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.15);border-radius:12px;">
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.7;margin:0;">
+      <strong style="color:var(--red);">⚠ 免責聲明 Disclaimer</strong><br>
+      本報告內容由自動化程式抓取公開市場數據，分析文字由 AI（Google Gemini）生成，僅供個人學習與資訊參考之用，<strong>不構成任何形式之投資建議、證券分析或買賣推薦</strong>。<br><br>
+      本站作者不具備任何國家或地區之證券投資顧問資格（包括但不限於加拿大 BCSC 註冊顧問資格、台灣金管會核准之投資顧問業務資格）。所有技術指標（RSI、均線、成交量等）僅為客觀數據呈現，不代表任何買賣時機之判斷。<br><br>
+      投資有風險，過去績效不代表未來表現。讀者應自行研究並諮詢合格之專業財務顧問後再做出任何投資決策。對於因參考本報告內容所導致之任何損失，本站不承擔任何責任。<br><br>
+      <em>This report is auto-generated for informational purposes only and does not constitute investment advice. The author is not a licensed financial advisor in any jurisdiction. All investment decisions should be made after consulting qualified professionals. Past performance does not guarantee future results.</em>
+    </p>
+  </div>
+
+  <footer>
+    Auto-generated · 2026/08/19 · GitHub Actions + Gemini AI · Full edition
+  </footer>
+
+</div>
+</body>
+</html>
