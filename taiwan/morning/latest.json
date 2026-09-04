@@ -1,17 +1,17 @@
 {
   "region": "tw_morning",
-  "date": "2026-09-03",
-  "date_str": "2026/09/03",
-  "weekday_zh": "週四",
-  "data_ref": "2026/09/02",
+  "date": "2026-09-04",
+  "date_str": "2026/09/04",
+  "weekday_zh": "週五",
+  "data_ref": "2026/09/03",
   "taiex": {
     "ticker": "^TWII",
-    "price": 46265.41015625,
-    "change": 100.69140625,
-    "change_pct": 0.2181133319478958,
-    "volume": 0
+    "price": 46164.71875,
+    "change": -784.0,
+    "change_pct": -1.6699071260597502,
+    "volume": 4100600
   },
   "tsx": null,
-  "filename": "tw-morning-2026-09-03.html",
-  "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/morning/tw-morning-2026-09-03.html"
+  "filename": "tw-morning-2026-09-04.html",
+  "report_url": "https://jobimtg.github.io/daily-stock-reports/taiwan/morning/tw-morning-2026-09-04.html"
 }
