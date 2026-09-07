@@ -6,10 +6,10 @@
   "data_ref": "2026/09/04",
   "taiex": {
     "ticker": "^TWII",
-    "price": 47326.26953125,
-    "change": 775.140625,
-    "change_pct": 1.6651381893682256,
-    "volume": 0
+    "price": 46551.12890625,
+    "change": 693.46875,
+    "change_pct": 1.5122200906831185,
+    "volume": 3967200
   },
   "tsx": {
     "ticker": "^GSPTSE",
