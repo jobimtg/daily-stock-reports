@@ -6,9 +6,9 @@
   "data_ref": "2026/09/18",
   "taiex": {
     "ticker": "^TWII",
-    "price": 47368.0390625,
-    "change": 187.2890625,
-    "change_pct": 0.39696075730038205,
+    "price": 47656.75,
+    "change": 476.0,
+    "change_pct": 1.0088860393274799,
     "volume": 0
   },
   "tsx": null,
