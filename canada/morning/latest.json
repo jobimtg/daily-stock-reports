@@ -13,10 +13,10 @@
   },
   "tsx": {
     "ticker": "^GSPTSE",
-    "price": 35470.66015625,
-    "change": -330.23828125,
-    "change_pct": -0.9224301502559185,
-    "volume": 63286760
+    "price": 35489.859375,
+    "change": -311.0390625,
+    "change_pct": -0.8688023934455206,
+    "volume": 275345304
   },
   "filename": "daily-financial-brief-2026-09-28.html",
   "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/morning/daily-financial-brief-2026-09-28.html"
