@@ -6,10 +6,10 @@
   "data_ref": "2026/10/13",
   "taiex": {
     "ticker": "^TWII",
-    "price": 49301.9609375,
-    "change": -11.48046875,
-    "change_pct": -0.023280607523256253,
-    "volume": 4501500
+    "price": 48861.1796875,
+    "change": 519.87109375,
+    "change_pct": 1.0754179166287892,
+    "volume": 0
   },
   "tsx": null,
   "filename": "tw-morning-2026-10-14.html",
