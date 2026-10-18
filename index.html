@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);min-height:100vh;color:#fff;-webkit-font-smoothing:antialiased}
-.container{max-width:980px;margin:0 auto;padding:24px 16px 80px}
+.container{max-width:1280px;margin:0 auto;padding:24px 16px 80px}
 header{text-align:center;padding:32px 0 28px}
 .logo{font-size:56px;margin-bottom:8px}
 h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:6px}
@@ -18,11 +18,11 @@ h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:6px}
 .stat-num{font-size:22px;font-weight:700;color:#64ffda}
 .stat-label{font-size:11px;color:#a8b2d1;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
 .stat+.stat{border-left:1px solid rgba(255,255,255,0.08)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
-.panel{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:14px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.panel{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:14px;height:clamp(460px,68vh,700px);display:flex;flex-direction:column;min-height:0}
 .section-title{font-size:13px;font-weight:700;color:#dbe4ff;text-transform:uppercase;letter-spacing:0.8px;margin:4px 0 12px;padding:0 2px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .section-title .count{background:rgba(100,255,218,0.15);color:#64ffda;padding:2px 8px;border-radius:10px;font-size:11px}
-.reports{display:flex;flex-direction:column;gap:10px}
+.reports{display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0;padding-right:4px;scrollbar-gutter:stable}
 .card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;transition:all 0.2s;text-decoration:none;color:inherit}
 .card:hover,.card:active{background:rgba(100,255,218,0.08);border-color:rgba(100,255,218,0.3);transform:translateY(-1px)}
 .card .icon{width:44px;height:44px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff}
@@ -40,8 +40,11 @@ h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .notice{margin-top:16px;color:#a8b2d1;font-size:12px;line-height:1.6;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);padding:12px 14px;border-radius:12px}
 footer{text-align:center;margin-top:40px;padding:20px 0;color:#6e7891;font-size:12px;border-top:1px solid rgba(255,255,255,0.06)}
-@media(max-width:760px){.grid{grid-template-columns:1fr}}
-@media(max-width:480px){h1{font-size:24px}.stat-num{font-size:18px}.card{padding:12px}.card .title{font-size:14px}}
+@media(max-width:980px){
+  .grid{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(320px,82vw);overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;padding-bottom:8px}
+  .panel{scroll-snap-align:start;height:clamp(440px,64vh,620px)}
+}
+@media(max-width:480px){h1{font-size:24px}.stat-num{font-size:18px}.card{padding:12px}.card .title{font-size:14px}.grid{grid-auto-columns:88vw}}
 </style>
 </head>
 <body>
@@ -151,8 +154,9 @@ async function load(){
 
   document.getElementById('content').innerHTML=`
     <div class="grid">
-      <div>${canadaHTML}</div>
-      <div>${twMorningHTML}${twClosingHTML}</div>
+      ${canadaHTML}
+      ${twMorningHTML}
+      ${twClosingHTML}
     </div>`;
 }
 load();
