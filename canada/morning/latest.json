@@ -1,23 +1,23 @@
 {
   "region": "full",
-  "date": "2026-10-30",
-  "date_str": "2026/10/30",
-  "weekday_zh": "週五",
-  "data_ref": "2026/10/29",
+  "date": "2026-11-02",
+  "date_str": "2026/11/02",
+  "weekday_zh": "週一",
+  "data_ref": "2026/10/30",
   "taiex": {
     "ticker": "^TWII",
-    "price": 46368.328125,
-    "change": -667.25,
-    "change_pct": -1.4186069919811366,
-    "volume": 3837400
+    "price": 44920.140625,
+    "change": -291.6875,
+    "change_pct": -0.645157499921377,
+    "volume": 0
   },
   "tsx": {
     "ticker": "^GSPTSE",
-    "price": 35605.578125,
-    "change": -643.421875,
-    "change_pct": -1.7750058622306824,
-    "volume": 203679259
+    "price": 35928.2109375,
+    "change": 308.2109375,
+    "change_pct": 0.8652749508702975,
+    "volume": 58760169
   },
-  "filename": "daily-financial-brief-2026-10-30.html",
-  "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/morning/daily-financial-brief-2026-10-30.html"
+  "filename": "daily-financial-brief-2026-11-02.html",
+  "report_url": "https://jobimtg.github.io/daily-stock-reports/canada/morning/daily-financial-brief-2026-11-02.html"
 }
